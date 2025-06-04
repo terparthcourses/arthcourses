@@ -3,11 +3,11 @@ import "./globals.css";
 // Next.js Metadata API
 import type { Metadata } from "next";
 
-// Components
-import { ThemeProvider } from "@/components/theme-provider";
-
 // Google Fonts
 import { Geist, Geist_Mono } from "next/font/google";
+
+// `ThemeProvider` Component
+import { ThemeProvider } from "@/components/theme-provider";
 
 // `AuthProvider` Component
 import { AuthProvider } from './(auth)/AuthProvider'
