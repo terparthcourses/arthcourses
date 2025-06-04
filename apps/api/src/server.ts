@@ -17,6 +17,7 @@ import { auth } from './lib/auth';
 import { toNodeHandler } from 'better-auth/node';
 
 // Routes
+import imagesRouter from './routes/images.route';
 import usersRouter from './routes/users.route';
 
 export const logger = pino({
@@ -58,6 +59,7 @@ export const createServer = (): Express => {
   app.use(pinoHttp({ logger }));
 
   // Mount routes
+  app.use('/api/images', imagesRouter);
   app.use('/api/users', usersRouter);
 
   // Health check endpoint
