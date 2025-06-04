@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: apps/app/Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./apps/app/.env
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./apps/api/.env

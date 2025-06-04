@@ -1,0 +1,34 @@
+// ./(main)/teacher/layout.tsx
+
+// UI Components
+import Container from "@/components/container";
+import { ModeToggle } from "@/components/mode-toggle";
+import { UserDropdown } from "@/app/(auth)/UserDropdown";
+
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <div className="border-b border-[var(--border)]">
+        <Container>
+          <nav className="flex justify-between items-center py-4">
+            <h1 className="text-xl font-medium flex items-center gap-4">
+              Articles
+            </h1>
+            <div className="flex items-center gap-2">
+              <ModeToggle />
+              <UserDropdown />
+            </div>
+          </nav>
+        </Container>
+      </div>
+
+      <div>
+        {children}
+      </div>
+    </>
+  );
+}

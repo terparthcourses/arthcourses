@@ -1,0 +1,30 @@
+{
+  "name": "@repo/database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "db:generate": "pnpm drizzle-kit generate --config=./src/drizzle.config.ts",
+    "db:migrate": "pnpm drizzle-kit migrate --config=./src/drizzle.config.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    ".": "./dist/src/index.js"
+  },
+  "dependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.42.0",
+    "postgres": "^3.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "drizzle-kit": "^0.31.0",
+    "tsx": "^4.19.3"
+  }
+}
