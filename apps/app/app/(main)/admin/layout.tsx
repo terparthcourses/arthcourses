@@ -16,7 +16,7 @@ export default function Layout({
         <Container>
           <nav className="flex justify-between items-center py-4">
             <h1 className="text-xl font-medium flex items-center gap-4">
-              Articles
+              Art History Courses
             </h1>
             <div className="flex items-center gap-2">
               <ModeToggle />
