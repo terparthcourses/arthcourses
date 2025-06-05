@@ -21,9 +21,6 @@ import { randomUUID } from 'crypto';
 // R2 Service
 import { uploadImageToR2, deleteImageFromR2 } from '../services/r2.service';
 
-// Rate Limiting
-import { checkRateLimit } from '../utils/rate-limit-handler';
-
 const storage = multer.memoryStorage();
 
 const upload = multer({
@@ -66,24 +63,15 @@ export class ImagesController {
         // Check if user is authenticated
         if (!session || !session.user) {
           return res.status(401).json({
-            title: "Authentication Required",
-            message: "You must be logged in to upload images",
-            details: { reason: "no_session" }
-          });
-        }
-
-        // Check R2 rate limit
-        const canProceed = await checkRateLimit(req.headers, true);
-        if (!canProceed) {
-          return res.status(429).json({
-            message: 'Too Many Requests'
+            message: "Unauthorized",
           });
         }
 
         // Upload the image to R2
         const imageUrl = await uploadImageToR2(
           req.file.buffer,
-          req.file.mimetype
+          req.file.mimetype,
+          req.headers
         );
 
         // Save image record to database
@@ -152,16 +140,8 @@ export class ImagesController {
         });
       }
 
-      // Check R2 rate limit
-      const canProceed = await checkRateLimit(req.headers, true);
-      if (!canProceed) {
-        return res.status(429).json({
-          message: 'Too Many Requests'
-        });
-      }
-
       // Delete the image from R2
-      await deleteImageFromR2(imageUrl);
+      await deleteImageFromR2(imageUrl, req.headers);
 
       // Delete the image record from database
       await db

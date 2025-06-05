@@ -7,7 +7,18 @@ import { r2Client, CLOUDFLARE_R2_BUCKET_NAME } from '../config/r2.config';
 // Crypto
 import crypto from 'crypto';
 
-export async function uploadImageToR2(file: Buffer, contentType: string): Promise<string> {
+// Rate Limiter
+import { checkRateLimit, getRemainingCalls } from '../utils/rate-limit-handler';
+
+export async function uploadImageToR2(file: Buffer, contentType: string, headers: Record<string, string | string[] | undefined>): Promise<string> {
+  // Check rate limit before proceeding
+  const isAllowed = await checkRateLimit(headers);
+
+  if (!isAllowed) {
+    const remainingCalls = await getRemainingCalls(headers);
+    throw new Error(`Rate limit exceeded. You have ${remainingCalls} calls remaining.`);
+  }
+
   // Generate a unique key for the image
   const key = `uploads/${crypto.randomUUID()}-${Date.now()}`;
 
@@ -38,7 +49,15 @@ export async function uploadImageToR2(file: Buffer, contentType: string): Promis
   }
 }
 
-export async function deleteImageFromR2(imageUrl: string): Promise<void> {
+export async function deleteImageFromR2(imageUrl: string, headers: Record<string, string | string[] | undefined>): Promise<void> {
+  // Check rate limit before proceeding
+  const isAllowed = await checkRateLimit(headers);
+
+  if (!isAllowed) {
+    const remainingCalls = await getRemainingCalls(headers);
+    throw new Error(`Rate limit exceeded. You have ${remainingCalls} calls remaining.`);
+  }
+
   try {
     // Extract the key from the image URL
     const url = new URL(imageUrl);

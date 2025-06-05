@@ -5,20 +5,9 @@ import { Request, Response } from 'express';
 import { auth } from '../lib/auth';
 import { fromNodeHeaders } from "better-auth/node";
 
-// Rate Limiting
-import { checkRateLimit } from '../utils/rate-limit-handler';
-
 export class UsersController {
   async getUser(req: Request, res: Response) {
     try {
-      // Check rate limit
-      const canProceed = await checkRateLimit(req.headers);
-      if (!canProceed) {
-        return res.status(429).json({
-          message: 'Too Many Requests',
-        });
-      }
-
       // Use Better-Auth to get the session
       const session = await auth.api.getSession({
         headers: fromNodeHeaders(req.headers),
@@ -41,14 +30,6 @@ export class UsersController {
 
   async signIn(req: Request, res: Response) {
     try {
-      // Check rate limit
-      const canProceed = await checkRateLimit(req.headers);
-      if (!canProceed) {
-        return res.status(429).json({
-          message: 'Too Many Requests',
-        });
-      }
-
       const {
         email,
         password
@@ -94,14 +75,6 @@ export class UsersController {
 
   async signUp(req: Request, res: Response) {
     try {
-      // Check rate limit
-      const canProceed = await checkRateLimit(req.headers);
-      if (!canProceed) {
-        return res.status(429).json({
-          message: 'Too Many Requests',
-        });
-      }
-
       const {
         email,
         password,
@@ -153,14 +126,6 @@ export class UsersController {
 
   async signOut(req: Request, res: Response) {
     try {
-      // Check rate limit
-      const canProceed = await checkRateLimit(req.headers);
-      if (!canProceed) {
-        return res.status(429).json({
-          message: 'Too Many Requests',
-        });
-      }
-
       // Use Better-Auth to sign out
       const response = await auth.api.signOut({
         asResponse: true,
