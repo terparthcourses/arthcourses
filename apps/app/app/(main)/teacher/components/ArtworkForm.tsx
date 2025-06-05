@@ -21,13 +21,18 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { InputImage } from "@/components/ui/input.image";
+import { MultipleSelect } from "@/components/ui/multi-select"
 import { Textarea } from "@/components/ui/textarea"
 
 // React Query
 import { UseMutationResult } from "@tanstack/react-query"
 
 // Constants
-import { artworkFormSchema, type ArtworkFormValues } from "../consants"
+import {
+  artworkFormSchema,
+  type ArtworkFormValues,
+  MEDIUM_TAGS,
+} from "../consants"
 
 // Lucide Icons
 import { LoaderCircle } from "lucide-react"
@@ -50,6 +55,7 @@ export function ArtworkForm({
       author: "",
       content: "",
       images: [],
+      mediumTags: [],
       collocation: "",
       link: "",
     },
@@ -143,6 +149,24 @@ export function ArtworkForm({
                 <FormLabel>Images</FormLabel>
                 <FormControl>
                   <InputImage
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="mediumTags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Medium Tags</FormLabel>
+                <FormControl>
+                  <MultipleSelect
+                    tags={MEDIUM_TAGS}
                     value={field.value}
                     onChange={field.onChange}
                   />

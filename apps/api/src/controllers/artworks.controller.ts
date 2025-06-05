@@ -23,7 +23,7 @@ export class ArtworksController {
         author,
         images,
         periodTags,
-        typeTags,
+        mediumTags,
         collocation,
         link,
       } = req.body;
@@ -57,7 +57,7 @@ export class ArtworksController {
         content,
         images: images || [],
         periodTags: periodTags || [],
-        typeTags: typeTags || [],
+        mediumTags: mediumTags || [],
         collocation,
         link,
         createdAt: new Date(),
@@ -150,7 +150,7 @@ export class ArtworksController {
         author,
         images,
         periodTags,
-        typeTags,
+        mediumTags,
         collocation,
         link,
         content
@@ -204,7 +204,7 @@ export class ArtworksController {
       updateData.content = content;
       updateData.images = images;
       updateData.periodTags = periodTags;
-      updateData.typeTags = typeTags;
+      updateData.mediumTags = mediumTags;
       updateData.collocation = collocation;
       updateData.link = link;
 

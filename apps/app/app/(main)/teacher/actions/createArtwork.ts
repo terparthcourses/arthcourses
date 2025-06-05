@@ -51,7 +51,7 @@ export const createArtwork = async (
       link: values.link || "",
       images: uploadedImages,
       periodTags: [],
-      typeTags: [],
+      mediumTags: values.mediumTags || [],
       order: 0
     });
   } catch (error) {

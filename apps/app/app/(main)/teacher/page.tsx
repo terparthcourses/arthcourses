@@ -39,11 +39,6 @@ export default function Page() {
     createArtwork,
   } = useArtworks()
 
-  // Handle new artwork
-  const handleNewArtwork = () => {
-    setIsArtworkDialogOpen(true)
-  }
-
   return (
     <>
       <header className="border-b border-[var(--border)]">
@@ -83,7 +78,7 @@ export default function Page() {
                   <h2 className="text-xl font-medium">Your Artworks</h2>
                   <Button
                     size="sm"
-                    onClick={handleNewArtwork}
+                    onClick={() => setIsArtworkDialogOpen(true)}
                   >
                     <PlusIcon
                       size={16}
