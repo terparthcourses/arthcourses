@@ -17,6 +17,7 @@ import { auth } from './lib/auth';
 import { toNodeHandler } from 'better-auth/node';
 
 // Routes
+import artworksRouter from './routes/artworks.route';
 import imagesRouter from './routes/images.route';
 import usersRouter from './routes/users.route';
 
@@ -59,6 +60,7 @@ export const createServer = (): Express => {
   app.use(pinoHttp({ logger }));
 
   // Mount routes
+  app.use('/api/artworks', artworksRouter);
   app.use('/api/images', imagesRouter);
   app.use('/api/users', usersRouter);
 
