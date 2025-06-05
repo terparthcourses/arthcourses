@@ -90,7 +90,7 @@ export const MultipleSelect = ({
                     {item.name}
                   </motion.span>
                   <button
-                    className="hover:text-destructive transition-colors"
+                    className="hover:text-destructive hover:cursor-pointer transition-colors"
                     onClick={() => onDeselect(item)}
                   >
                     <X size={14} />
