@@ -1,0 +1,186 @@
+"use client"
+
+// Zod
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+
+// Utilities
+import { cn } from "@/lib/clsx-handler"
+
+// React Hook Form
+import { useForm } from "react-hook-form"
+
+// UI Components
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { InputImage } from "@/components/ui/input.image";
+import { Textarea } from "@/components/ui/textarea"
+
+// React Query
+import { UseMutationResult } from "@tanstack/react-query"
+
+// Constants
+import { artworkFormSchema, type ArtworkFormValues } from "../consants"
+
+// Lucide Icons
+import { LoaderCircle } from "lucide-react"
+
+interface ArtworkFormProps {
+  className?: string;
+  onSubmit: UseMutationResult<unknown, Error, ArtworkFormValues, unknown>;
+}
+
+export function ArtworkForm({
+  className,
+  onSubmit,
+}: ArtworkFormProps) {
+
+  const form = useForm({
+    resolver: zodResolver(artworkFormSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      author: "",
+      content: "",
+      images: [],
+      collocation: "",
+      link: "",
+    },
+  })
+
+  const handleSubmit = async (values: z.infer<typeof artworkFormSchema>) => {
+    onSubmit.mutate(values);
+  }
+
+  if (onSubmit.isPending) {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <LoaderCircle className="animate-spin h-5 w-5 text-primary" />
+      </div>
+    )
+  }
+
+  return (
+    <div className={cn("flex flex-col gap-4", className)}>
+      <Form {...form}>
+        <form id="artwork-form" onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Title <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="e.g. Starry Night" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="author"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Author <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="e.g. Vincent van Gogh" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Description <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Short summary of the artwork" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Content <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Textarea {...field} placeholder="Detailed information, context, or story about the artwork" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="images"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Images</FormLabel>
+                <FormControl>
+                  <InputImage
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="collocation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Collocation</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="e.g. Museum of Modern Art, New York" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="link"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Link</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="e.g. https://example.com/artwork" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    </div>
+  )
+}

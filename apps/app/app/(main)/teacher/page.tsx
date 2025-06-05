@@ -15,20 +15,33 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
+// `ArtworkDialog` Component
+import { ArtworkDialog } from "./components/ArtworkDialog"
+
+// React Query
+import { useArtworks } from "./hooks/useArtworks"
+
 // Lucide Icons
 import { BookOpenIcon, PaletteIcon, PlusIcon } from "lucide-react"
 
 export default function Page() {
+  // State for the active tab
   const [activeTab, setActiveTab] = useState("artworks")
 
-  const handleNewArtwork = () => {
-    // Handle new artwork creation
-    console.log("Creating new artwork")
-  }
+  // State for the artwork dialog
+  const [isArtworkDialogOpen, setIsArtworkDialogOpen] = useState(false)
 
-  const handleNewCourse = () => {
-    // Handle new course creation
-    console.log("Creating new course")
+  // Artworks
+  const {
+    data: artworks,
+    isLoading,
+    isError,
+    createArtwork,
+  } = useArtworks()
+
+  // Handle new artwork
+  const handleNewArtwork = () => {
+    setIsArtworkDialogOpen(true)
   }
 
   return (
@@ -81,6 +94,12 @@ export default function Page() {
                 </div>
               </Container>
             </header>
+
+            <ArtworkDialog
+              open={isArtworkDialogOpen}
+              setOpen={setIsArtworkDialogOpen}
+              onSubmit={createArtwork}
+            />
           </>
         ) : (
           <>
@@ -90,7 +109,6 @@ export default function Page() {
                   <h2 className="text-xl font-medium">Your Courses</h2>
                   <Button
                     size="sm"
-                    onClick={handleNewCourse}
                   >
                     <PlusIcon
                       size={16}

@@ -109,8 +109,9 @@ export const artworks = pgTable("artworks", {
 export const images = pgTable("images", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
   url: text("url").notNull(),
-  size: integer("size"),
+  size: integer("size").notNull(),
   mimeType: imageMimeTypeEnum("mime_type").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

@@ -75,16 +75,16 @@ export function InputImage({ onChange, value }: InputImageProps) {
         onClick={openFileDialog}
         data-dragging={isDragging || undefined}
         data-files={files.length > 0 || undefined}
-        className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px] cursor-pointer"
+        className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px] cursor-pointer dark:bg-input/30"
       >
         <input
           {...getInputProps()}
-          className="sr-only"
+          className="sr-only dark:bg-input/30"
           aria-label="Upload image file"
         />
         <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
           <div
-            className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
+            className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border border-[var(--border)] dark:bg-input/30"
             aria-hidden="true"
           >
             <ImageIcon className="size-4 opacity-60" />
@@ -112,7 +112,7 @@ export function InputImage({ onChange, value }: InputImageProps) {
           {files.map((file) => (
             <div
               key={file.id}
-              className="bg-background flex items-center justify-between gap-2 rounded-lg border p-2 pe-3"
+              className="flex items-center justify-between gap-2 rounded-lg border border-[var(--border)] p-2 pe-3 dark:bg-input/30"
             >
               <div className="flex items-center gap-3 overflow-hidden">
                 <div className="bg-accent aspect-square shrink-0 rounded">
@@ -144,7 +144,6 @@ export function InputImage({ onChange, value }: InputImageProps) {
             </div>
           ))}
 
-          {/* Remove all files button */}
           {files.length > 1 && (
             <div>
               <Button size="sm" variant="outline" onClick={clearFiles}>

@@ -67,7 +67,7 @@ export class ImagesController {
           });
         }
 
-        // Upload the image to R2
+        // Upload the image
         const imageUrl = await uploadImageToR2(
           req.file.buffer,
           req.file.mimetype,
@@ -82,6 +82,7 @@ export class ImagesController {
           url: imageUrl,
           size: req.file.size,
           mimeType: req.file.mimetype as any,
+          name: req.file.originalname,
         });
 
         return res.status(201).json({
