@@ -4,19 +4,24 @@ import { api } from "@/lib/api-handler"
 // Constants
 import type { ArtworkFormValues } from "../consants"
 
-export const createArtwork = async (
+export const updateArtwork = async (
+  artworkId: string,
   values: ArtworkFormValues,
 ) => {
   try {
     const uploadedImages: string[] = [];
+    const existingImages: string[] = [];
 
     if (values.images && values.images.length > 0) {
       for (const image of values.images) {
-        const formData = new FormData();
+        if (image && image.file && image.file.url) {
+          existingImages.push(image.file.url);
+          continue;
+        }
 
         // Prepare form data
-        const file = image.file instanceof File ? image.file : new Blob();
-        formData.append('image', file, image.file instanceof File ? image.file.name : 'unknown');
+        const formData = new FormData();
+        formData.append('image', image.file instanceof File ? image.file : new Blob());
 
         // Upload the image
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/images/upload`, {
@@ -41,20 +46,22 @@ export const createArtwork = async (
       }
     }
 
+    // Combine all image URLs
+    const allImages = [...existingImages, ...uploadedImages];
+
     // Submit the artwork
-    await api.post('/api/artworks', {
+    await api.put(`/api/artworks/${artworkId}`, {
       title: values.title,
       description: values.description,
       author: values.author,
       content: values.content,
       collocation: values.collocation || "",
       link: values.link || "",
-      images: uploadedImages,
+      images: allImages,
       periodTags: [],
-      mediumTags: values.mediumTags || [],
-      order: 0
+      typeTags: []
     });
   } catch (error) {
-    console.error("Error creating artwork:", error);
+    console.error("Error updating artwork:", error);
   }
 }

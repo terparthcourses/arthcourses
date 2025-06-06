@@ -11,21 +11,22 @@ import {
   useQueryClient
 } from "@tanstack/react-query";
 
-// Types
-import { type Artwork } from '@repo/database';
-
 // Actions
 import { createArtwork } from '../actions/createArtwork';
+import { deleteArtwork } from '../actions/deleteArtwork';
+import { getArtworks } from '../actions/getArtworks';
+import { updateArtwork } from '../actions/updateArtwork';
 
 // Constants
 import { artworkFormSchema } from '../consants';
+import { type Artwork } from '@repo/database';
 
 export function useArtworks() {
   const queryClient = useQueryClient();
 
   const artworksQuery = useQuery<Artwork[]>({
     queryKey: ['teacher-artworks'],
-    queryFn: () => api.get<Artwork[]>('/api/artworks'),
+    queryFn: () => getArtworks(),
   });
 
   const createArtworkMutation = useMutation({
@@ -35,8 +36,25 @@ export function useArtworks() {
     },
   });
 
+  const updateArtworkMutation = useMutation({
+    mutationFn: (data: { id: string; values: z.infer<typeof artworkFormSchema> }) =>
+      updateArtwork(data.id, data.values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
+    },
+  });
+
+  const deleteArtworkMutation = useMutation({
+    mutationFn: (artworkId: string) => deleteArtwork(artworkId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
+    },
+  });
+
   return {
     ...artworksQuery,
     createArtwork: createArtworkMutation,
+    updateArtwork: updateArtworkMutation,
+    deleteArtwork: deleteArtworkMutation,
   };
 }

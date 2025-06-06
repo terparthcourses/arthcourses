@@ -15,6 +15,9 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
+// Types
+import { type Artwork } from "@repo/database";
+
 // `ArtworkDialog` Component
 import { ArtworkDialog } from "./components/ArtworkDialog"
 
@@ -40,9 +43,13 @@ export default function Page() {
     isLoading,
     isError,
     createArtwork,
+    deleteArtwork,
   } = useArtworks()
 
-  console.log(artworks)
+  const handleDeleteArtwork = (artwork: Artwork) => {
+    if (!artwork.id) return;
+    deleteArtwork.mutate(artwork.id);
+  };
 
   return (
     <>
@@ -101,7 +108,10 @@ export default function Page() {
                   <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6">
                     {artworks.map((artwork) => (
                       <div key={artwork.id} className="break-inside-avoid">
-                        <ArtworkCard artwork={artwork} />
+                        <ArtworkCard
+                          artwork={artwork}
+                          onDelete={handleDeleteArtwork}
+                        />
                       </div>
                     ))}
                   </div>

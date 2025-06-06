@@ -31,7 +31,7 @@ import { ArtworkForm } from "./ArtworkForm"
 // React Query
 import { UseMutationResult } from "@tanstack/react-query"
 
-// Types
+// Constants
 import { type ArtworkFormValues } from "../consants"
 
 // Lucide Icons
@@ -130,14 +130,12 @@ export function ArtworkDialog({
 
       <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
         <AlertDialogContent>
-          <div className="flex flex-col gap-2 p-2">
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to close this form? Any unsaved changes will be lost.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-          </div>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to close this form? Any unsaved changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={handleAlertDialogCancel}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleAlertDialogAction}>Discard changes</AlertDialogAction>
