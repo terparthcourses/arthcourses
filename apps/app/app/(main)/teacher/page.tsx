@@ -18,6 +18,9 @@ import {
 // `ArtworkDialog` Component
 import { ArtworkDialog } from "./components/ArtworkDialog"
 
+// `ArtworkCard` Component
+import { ArtworkCard } from "./components/ArtworkCard"
+
 // React Query
 import { useArtworks } from "./hooks/useArtworks"
 
@@ -38,6 +41,8 @@ export default function Page() {
     isError,
     createArtwork,
   } = useArtworks()
+
+  console.log(artworks)
 
   return (
     <>
@@ -89,6 +94,20 @@ export default function Page() {
                 </div>
               </Container>
             </header>
+
+            <main className="mb-16">
+              <Container>
+                {artworks && artworks.length > 0 && (
+                  <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6">
+                    {artworks.map((artwork) => (
+                      <div key={artwork.id} className="break-inside-avoid">
+                        <ArtworkCard artwork={artwork} />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Container>
+            </main>
 
             <ArtworkDialog
               open={isArtworkDialogOpen}
