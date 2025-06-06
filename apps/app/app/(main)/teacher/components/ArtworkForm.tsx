@@ -34,9 +34,6 @@ import {
   MEDIUM_TAGS,
 } from "../consants"
 
-// Lucide Icons
-import { LoaderCircle } from "lucide-react"
-
 interface ArtworkFormProps {
   className?: string;
   onSubmit: UseMutationResult<unknown, Error, ArtworkFormValues, unknown>;
@@ -65,14 +62,6 @@ export function ArtworkForm({
     onSubmit.mutate(values);
   }
 
-  if (onSubmit.isPending) {
-    return (
-      <div className="flex justify-center items-center h-96">
-        <LoaderCircle className="animate-spin h-5 w-5 text-primary" />
-      </div>
-    )
-  }
-
   return (
     <div className={cn("flex flex-col gap-4", className)}>
       <Form {...form}>
@@ -86,7 +75,11 @@ export function ArtworkForm({
                   Title <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="e.g. Starry Night" />
+                  <Input
+                    {...field}
+                    placeholder="e.g. Starry Night"
+                    disabled={onSubmit.isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,7 +95,11 @@ export function ArtworkForm({
                   Author <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="e.g. Vincent van Gogh" />
+                  <Input
+                    {...field}
+                    placeholder="e.g. Vincent van Gogh"
+                    disabled={onSubmit.isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -118,7 +115,11 @@ export function ArtworkForm({
                   Description <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Short summary of the artwork" />
+                  <Input
+                    {...field}
+                    placeholder="Short summary of the artwork"
+                    disabled={onSubmit.isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -134,7 +135,11 @@ export function ArtworkForm({
                   Content <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Textarea {...field} placeholder="Detailed information, context, or story about the artwork" />
+                  <Textarea
+                    {...field}
+                    placeholder="Detailed information, context, or story about the artwork"
+                    disabled={onSubmit.isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -183,7 +188,11 @@ export function ArtworkForm({
               <FormItem>
                 <FormLabel>Collocation</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="e.g. Museum of Modern Art, New York" />
+                  <Input
+                    {...field}
+                    placeholder="e.g. Museum of Modern Art, New York"
+                    disabled={onSubmit.isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -197,7 +206,11 @@ export function ArtworkForm({
               <FormItem>
                 <FormLabel>Link</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="e.g. https://example.com/artwork" />
+                  <Input
+                    {...field}
+                    placeholder="e.g. https://example.com/artwork"
+                    disabled={onSubmit.isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

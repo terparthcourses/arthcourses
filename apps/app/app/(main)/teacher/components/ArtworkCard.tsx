@@ -1,8 +1,5 @@
 "use client";
 
-// Next.js Components
-import Image from "next/image";
-
 // UI Components
 import { Button } from "@/components/ui/button";
 import {
@@ -13,38 +10,23 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-// Types
+// Next.js Components
+import Image from "next/image";
+
+// Constants
 import { type Artwork } from "@repo/database";
 
 // Lucide Icons
 import {
-  Trash2,
-  Clock,
-  Pencil,
+  ClockIcon,
+  PencilIcon,
+  Trash2Icon
 } from "lucide-react";
 
 interface ArtworkCardProps {
   artwork: Artwork;
   onEdit?: (artwork: Artwork) => void;
   onDelete?: (artwork: Artwork) => void;
-}
-
-interface MetadataItemProps {
-  icon: React.ReactNode;
-  title: string;
-  children: React.ReactNode;
-}
-
-function MetadataItem({ icon, title, children }: MetadataItemProps) {
-  return (
-    <div className="flex items-start gap-2 py-1.5">
-      <div className="mt-0.5 flex-shrink-0 text-muted-foreground">{icon}</div>
-      <div className="space-y-1">
-        <p className="text-xs font-medium text-muted-foreground">{title}</p>
-        <div className="text-sm text-foreground">{children}</div>
-      </div>
-    </div>
-  );
 }
 
 export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
@@ -133,7 +115,7 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
 
       <CardFooter className="flex items-center justify-between border-t px-6 py-4">
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Clock className="h-3.5 w-3.5 mr-1" />
+          <ClockIcon className="h-3.5 w-3.5 mr-1" />
           Last updated {formattedDate(updatedAt)}
         </div>
 
@@ -147,7 +129,7 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
               onDelete?.(artwork);
             }}
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            <Trash2Icon className="h-3.5 w-3.5" />
             Delete
           </Button>
           <Button
@@ -159,7 +141,7 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
               onEdit?.(artwork);
             }}
           >
-            <Pencil className="h-3.5 w-3.5" />
+            <PencilIcon className="h-3.5 w-3.5" />
             Edit
           </Button>
         </div>
