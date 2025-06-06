@@ -41,8 +41,8 @@ function AlertDialogContent({ className, ...props }: React.ComponentProps<typeof
         data-slot="alert-dialog-content"
         className={cn(
           "fixed left-1/2 top-1/2 z-50 w-96",
-          "translate-x-[-50%] translate-y-[-50%] overflow-y-auto rounded-xl border p-4 shadow-lg",
-          "bg-background duration-200 grid gap-4",
+          "translate-x-[-50%] translate-y-[-50%] overflow-y-auto rounded-xl border border-[var(--border)] p-4 shadow-lg",
+          "bg-card duration-200 grid gap-4",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           "max-w-9/10 sm:max-w-[32rem]",

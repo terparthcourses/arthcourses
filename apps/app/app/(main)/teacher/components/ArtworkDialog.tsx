@@ -108,6 +108,7 @@ export function ArtworkDialog({
           <DialogFooter>
             <Button
               type="button"
+              size="sm"
               variant="outline"
               onClick={() => handleSetDialogOpen(false)}
               disabled={onSubmit.isPending}
@@ -116,6 +117,7 @@ export function ArtworkDialog({
             </Button>
             <Button
               type="submit"
+              size="sm"
               form={`artwork-${onSubmitType}-form`}
               className="hover:cursor-pointer"
               onClick={() => setIsDialogOpen(false)}

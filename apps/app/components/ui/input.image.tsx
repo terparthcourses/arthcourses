@@ -123,7 +123,7 @@ export function InputImage({ onChange, value }: InputImageProps) {
           {files.map((file) => (
             <div
               key={file.id}
-              className="bg-background flex items-center justify-between gap-2 rounded-lg border border-[var(--border)] p-2 pe-3"
+              className="bg-card flex items-center justify-between gap-2 rounded-lg border border-[var(--border)] p-2 pe-3"
             >
               <div className="flex items-center gap-3 overflow-hidden">
                 <div className="bg-accent aspect-square shrink-0 rounded">
