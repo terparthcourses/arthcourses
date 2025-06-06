@@ -1,9 +1,19 @@
 "use client"
 
 // React Hooks
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 // UI Components
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -21,37 +31,59 @@ import { ArtworkForm } from "./ArtworkForm"
 // React Query
 import { UseMutationResult } from "@tanstack/react-query"
 
-// Constants
+// Types
 import { type ArtworkFormValues } from "../consants"
 
 // Lucide Icons
 import { LoaderCircle } from "lucide-react"
 
 interface ArtworkDialogProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  isDialogOpen: boolean;
+  setIsDialogOpen: (open: boolean) => void;
   onSubmit: UseMutationResult<unknown, Error, ArtworkFormValues, unknown>;
 }
 
 export function ArtworkDialog({
-  open,
-  setOpen,
+  isDialogOpen,
+  setIsDialogOpen,
   onSubmit,
 }: ArtworkDialogProps) {
 
+  // State for alert dialog
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+
   useEffect(() => {
     if (onSubmit.isSuccess) {
-      setOpen(false);
+      setIsDialogOpen(false);
     }
-  }, [onSubmit.isSuccess, setOpen]);
+  }, [onSubmit.isSuccess, setIsDialogOpen]);
+
+  const handleSetDialogOpen = (newOpen: boolean) => {
+    if (!newOpen) {
+      setIsAlertDialogOpen(true);
+    } else {
+      setIsDialogOpen(true);
+    }
+  };
+
+  // Handle alert dialog action
+  const handleAlertDialogAction = () => {
+    setIsAlertDialogOpen(false);
+    setIsDialogOpen(false);
+  };
+
+  // Handle alert dialog cancel
+  const handleAlertDialogCancel = () => {
+    setIsAlertDialogOpen(false);
+  };
 
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={handleSetDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              New Artwork
+              Create Artwork
             </DialogTitle>
             <DialogDescription>
               Enter the details of your artwork below
@@ -69,7 +101,12 @@ export function ArtworkDialog({
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleSetDialogOpen(false)}
+              disabled={onSubmit.isPending}
+            >
               Cancel
             </Button>
             <Button
@@ -90,6 +127,23 @@ export function ArtworkDialog({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
+        <AlertDialogContent>
+          <div className="flex flex-col gap-2 p-2">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to close this form? Any unsaved changes will be lost.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleAlertDialogCancel}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleAlertDialogAction}>Discard changes</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

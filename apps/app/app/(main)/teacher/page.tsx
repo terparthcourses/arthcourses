@@ -89,7 +89,7 @@ export default function Page() {
                       size={16}
                       aria-hidden="true"
                     />
-                    New artwork
+                    Create artwork
                   </Button>
                 </div>
               </Container>
@@ -110,8 +110,8 @@ export default function Page() {
             </main>
 
             <ArtworkDialog
-              open={isArtworkDialogOpen}
-              setOpen={setIsArtworkDialogOpen}
+              isDialogOpen={isArtworkDialogOpen}
+              setIsDialogOpen={setIsArtworkDialogOpen}
               onSubmit={createArtwork}
             />
           </>
@@ -128,7 +128,7 @@ export default function Page() {
                       size={16}
                       aria-hidden="true"
                     />
-                    New course
+                    Create course
                   </Button>
                 </div>
               </Container>
