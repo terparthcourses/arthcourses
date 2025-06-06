@@ -28,11 +28,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 // `ArtworkForm` Component
 import { ArtworkForm } from "./ArtworkForm"
 
-// React Query
-import { UseMutationResult } from "@tanstack/react-query"
-
 // Constants
-import { type ArtworkFormValues } from "../consants"
+import { type Artwork } from "@repo/database"
 
 // Lucide Icons
 import { LoaderCircle } from "lucide-react"
@@ -40,13 +37,17 @@ import { LoaderCircle } from "lucide-react"
 interface ArtworkDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
-  onSubmit: UseMutationResult<unknown, Error, ArtworkFormValues, unknown>;
+  onSubmit: any;
+  onSubmitType: "create" | "update";
+  artwork?: Artwork;
 }
 
 export function ArtworkDialog({
   isDialogOpen,
   setIsDialogOpen,
   onSubmit,
+  onSubmitType,
+  artwork,
 }: ArtworkDialogProps) {
 
   // State for alert dialog
@@ -83,7 +84,9 @@ export function ArtworkDialog({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              Create Artwork
+              {
+                onSubmitType === "create" ? "Create Artwork" : "Update Artwork"
+              }
             </DialogTitle>
             <DialogDescription>
               Enter the details of your artwork below
@@ -95,6 +98,8 @@ export function ArtworkDialog({
               <div className="px-6 py-4">
                 <ArtworkForm
                   onSubmit={onSubmit}
+                  onSubmitType={onSubmitType}
+                  artwork={artwork}
                 />
               </div>
             </ScrollArea>
@@ -111,18 +116,32 @@ export function ArtworkDialog({
             </Button>
             <Button
               type="submit"
-              form="artwork-form"
+              form={`artwork-${onSubmitType}-form`}
               className="hover:cursor-pointer"
+              onClick={() => setIsDialogOpen(false)}
               disabled={onSubmit.isPending}
             >
-              {onSubmit.isPending ? (
-                <>
-                  <LoaderCircle className="h-4 w-4 animate-spin" />
-                  Creating artwork
-                </>
-              ) : (
-                "Create artwork"
-              )}
+              {
+                onSubmitType === "create" ? (
+                  onSubmit.isPending ? (
+                    <>
+                      <LoaderCircle className="h-4 w-4 animate-spin" />
+                      Creating artwork
+                    </>
+                  ) : (
+                    "Create artwork"
+                  )
+                ) : (
+                  onSubmit.isPending ? (
+                    <>
+                      <LoaderCircle className="h-4 w-4 animate-spin" />
+                      Updating artwork
+                    </>
+                  ) : (
+                    "Update artwork"
+                  )
+                )
+              }
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -136,6 +155,7 @@ export function ArtworkDialog({
               Are you sure you want to close this form? Any unsaved changes will be lost.
             </AlertDialogDescription>
           </AlertDialogHeader>
+
           <AlertDialogFooter>
             <AlertDialogCancel onClick={handleAlertDialogCancel}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleAlertDialogAction}>Discard changes</AlertDialogAction>

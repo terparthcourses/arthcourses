@@ -1,10 +1,14 @@
 "use client"
 
+// React Hooks
+import { useEffect, useState } from "react"
+
 // Zod
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 // Utilities
+import { api } from "@/lib/api-handler"
 import { cn } from "@/lib/clsx-handler"
 
 // React Hook Form
@@ -24,26 +28,30 @@ import { InputImage } from "@/components/ui/input.image";
 import { MultipleSelect } from "@/components/ui/multi-select"
 import { Textarea } from "@/components/ui/textarea"
 
-// React Query
-import { UseMutationResult } from "@tanstack/react-query"
-
 // Constants
 import {
   artworkFormSchema,
   type ArtworkFormValues,
   MEDIUM_TAGS,
 } from "../consants"
+import { type Artwork, type Image } from "@repo/database"
+
+// Lucide Icons
+import { LoaderCircle } from "lucide-react"
 
 interface ArtworkFormProps {
   className?: string;
-  onSubmit: UseMutationResult<unknown, Error, ArtworkFormValues, unknown>;
+  onSubmit: any;
+  onSubmitType: "create" | "update";
+  artwork?: Artwork;
 }
 
 export function ArtworkForm({
   className,
   onSubmit,
+  onSubmitType,
+  artwork,
 }: ArtworkFormProps) {
-
   const form = useForm({
     resolver: zodResolver(artworkFormSchema),
     defaultValues: {
@@ -58,14 +66,80 @@ export function ArtworkForm({
     },
   })
 
-  const handleSubmit = async (values: z.infer<typeof artworkFormSchema>) => {
-    onSubmit.mutate(values);
+  const handleSubmit = async (values: ArtworkFormValues) => {
+    if (onSubmitType === "create") {
+      onSubmit?.({
+        values: values,
+      });
+    } else {
+      onSubmit?.({
+        artwork: artwork,
+        values: values,
+      });
+    }
+  }
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const populateArtworkForm = async (artwork: Artwork) => {
+      setIsLoading(true)
+
+      try {
+        const images = []
+
+        if (artwork.images && artwork.images.length > 0) {
+          for (const url of artwork.images) {
+            const data = await api.get<Image>(`/api/images/${encodeURIComponent(url)}`)
+
+            images.push({
+              id: data.id,
+              file: {
+                id: data.id,
+                name: data.name,
+                size: data.size || 0,
+                type: data.mimeType,
+                url: data.url
+              },
+              preview: data.url
+            })
+          }
+        }
+
+        form.reset({
+          title: artwork.title,
+          author: artwork.author,
+          description: artwork.description,
+          content: artwork.content,
+          images: images,
+          mediumTags: artwork.mediumTags || [],
+          collocation: artwork.collocation || "",
+          link: artwork.link || "",
+        })
+      } catch (err) {
+        console.error("Error populating artwork form:", err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (onSubmitType === "update" && artwork) {
+      populateArtworkForm(artwork)
+    }
+  }, [artwork, form])
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-96 max-h-full">
+        <LoaderCircle className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    )
   }
 
   return (
     <div className={cn("flex flex-col gap-4", className)}>
       <Form {...form}>
-        <form id="artwork-form" onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <form id={`artwork-${onSubmitType}-form`} onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="title"

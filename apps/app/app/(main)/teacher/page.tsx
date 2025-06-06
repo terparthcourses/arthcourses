@@ -15,9 +15,6 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
-// Types
-import { type Artwork } from "@repo/database";
-
 // `ArtworkDialog` Component
 import { ArtworkDialog } from "./components/ArtworkDialog"
 
@@ -27,8 +24,16 @@ import { ArtworkCard } from "./components/ArtworkCard"
 // React Query
 import { useArtworks } from "./hooks/useArtworks"
 
+// Constants
+import { type Artwork } from "@repo/database";
+import { type ArtworkFormValues } from "./consants"
+
 // Lucide Icons
-import { BookOpenIcon, PaletteIcon, PlusIcon } from "lucide-react"
+import {
+  BookOpenIcon,
+  PaletteIcon,
+  PlusIcon,
+} from "lucide-react"
 
 export default function Page() {
   // State for the active tab
@@ -37,18 +42,44 @@ export default function Page() {
   // State for the artwork dialog
   const [isArtworkDialogOpen, setIsArtworkDialogOpen] = useState(false)
 
-  // Artworks
   const {
     data: artworks,
     isLoading,
     isError,
     createArtwork,
     deleteArtwork,
+    updateArtwork,
   } = useArtworks()
 
-  const handleDeleteArtwork = (artwork: Artwork) => {
+  const handleDeleteArtwork = ({
+    artwork
+  }: {
+    artwork: Artwork;
+  }) => {
     if (!artwork.id) return;
     deleteArtwork.mutate(artwork.id);
+  };
+
+  const handleUpdateArtwork = ({
+    artwork,
+    values
+  }: {
+    artwork: Artwork;
+    values: ArtworkFormValues;
+  }) => {
+    if (!artwork.id) return;
+    updateArtwork.mutate({
+      id: artwork.id,
+      values,
+    });
+  };
+
+  const handleCreateArtwork = ({
+    values
+  }: {
+    values: ArtworkFormValues;
+  }) => {
+    createArtwork.mutate(values);
   };
 
   return (
@@ -111,6 +142,7 @@ export default function Page() {
                         <ArtworkCard
                           artwork={artwork}
                           onDelete={handleDeleteArtwork}
+                          onUpdate={handleUpdateArtwork}
                         />
                       </div>
                     ))}
@@ -122,7 +154,8 @@ export default function Page() {
             <ArtworkDialog
               isDialogOpen={isArtworkDialogOpen}
               setIsDialogOpen={setIsArtworkDialogOpen}
-              onSubmit={createArtwork}
+              onSubmit={handleCreateArtwork}
+              onSubmitType="create"
             />
           </>
         ) : (

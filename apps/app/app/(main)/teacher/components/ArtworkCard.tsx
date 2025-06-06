@@ -23,10 +23,14 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
+// `ArtworkDialog` Component
+import { ArtworkDialog } from "./ArtworkDialog";
+
 // Next.js Components
 import Image from "next/image";
 
 // Constants
+import { type ArtworkFormValues } from "../consants";
 import { type Artwork } from "@repo/database";
 
 // Lucide Icons
@@ -38,11 +42,21 @@ import {
 
 interface ArtworkCardProps {
   artwork: Artwork;
-  onEdit?: (artwork: Artwork) => void;
-  onDelete?: (artwork: Artwork) => void;
+  onDelete?: ({
+    artwork
+  }: {
+    artwork: Artwork;
+  }) => void;
+  onUpdate?: ({
+    artwork,
+    values
+  }: {
+    artwork: Artwork;
+    values: ArtworkFormValues;
+  }) => void;
 }
 
-export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
+export function ArtworkCard({ artwork, onUpdate, onDelete }: ArtworkCardProps) {
   const {
     id,
     title,
@@ -55,13 +69,18 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
     updatedAt,
   } = artwork;
 
+  // State for the artwork dialog
+  const [isArtworkDialogOpen, setIsArtworkDialogOpen] = useState(false)
+
   // State for alert dialog
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
 
   // Handle alert dialog action
   const handleAlertDialogAction = () => {
     setIsAlertDialogOpen(false);
-    onDelete?.(artwork);
+    onDelete?.({
+      artwork: artwork,
+    });
   };
 
   // Handle alert dialog cancel
@@ -90,11 +109,6 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
         day: "numeric",
       })
       : "N/A";
-
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsAlertDialogOpen(true);
-  };
 
   return (
     <>
@@ -158,7 +172,7 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
               variant="outline"
               size="sm"
               className="text-xs text-destructive hover:bg-destructive/10 hover:text-destructive-foreground"
-              onClick={handleDelete}
+              onClick={() => setIsAlertDialogOpen(true)}
             >
               <Trash2Icon className="h-3.5 w-3.5" />
               Delete
@@ -167,10 +181,7 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
               variant="outline"
               size="sm"
               className="text-xs"
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit?.(artwork);
-              }}
+              onClick={() => setIsArtworkDialogOpen(true)}
             >
               <PencilIcon className="h-3.5 w-3.5" />
               Edit
@@ -178,6 +189,14 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
           </div>
         </CardFooter>
       </Card>
+
+      <ArtworkDialog
+        isDialogOpen={isArtworkDialogOpen}
+        setIsDialogOpen={setIsArtworkDialogOpen}
+        onSubmit={onUpdate}
+        onSubmitType="update"
+        artwork={artwork}
+      />
 
       <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
         <AlertDialogContent>
@@ -187,6 +206,7 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
               Are you sure you want to delete "{title}"? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
+
           <AlertDialogFooter>
             <AlertDialogCancel onClick={handleAlertDialogCancel}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleAlertDialogAction}>Delete artwork</AlertDialogAction>

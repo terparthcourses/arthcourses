@@ -18,7 +18,7 @@ import { getArtworks } from '../actions/getArtworks';
 import { updateArtwork } from '../actions/updateArtwork';
 
 // Constants
-import { artworkFormSchema } from '../consants';
+import { artworkFormSchema, type ArtworkFormValues } from '../consants';
 import { type Artwork } from '@repo/database';
 
 export function useArtworks() {
@@ -30,14 +30,14 @@ export function useArtworks() {
   });
 
   const createArtworkMutation = useMutation({
-    mutationFn: (values: z.infer<typeof artworkFormSchema>) => createArtwork(values),
+    mutationFn: (values: ArtworkFormValues) => createArtwork(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
     },
   });
 
   const updateArtworkMutation = useMutation({
-    mutationFn: (data: { id: string; values: z.infer<typeof artworkFormSchema> }) =>
+    mutationFn: (data: { id: string; values: ArtworkFormValues }) =>
       updateArtwork(data.id, data.values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });

@@ -1,7 +1,7 @@
 "use client"
 
-import { AlertCircleIcon, ImageIcon, XIcon } from "lucide-react"
-import { useEffect } from "react"
+import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from "lucide-react"
+import { useEffect, useState } from "react"
 
 import {
   formatBytes,
@@ -14,28 +14,39 @@ import { Button } from "@/components/ui/button"
 
 interface InputImageProps {
   onChange?: (images: FileWithPreview[]) => void;
-  value?: FileWithPreview[];
+  value?: (FileWithPreview | string)[];
 }
 
 export function InputImage({ onChange, value }: InputImageProps) {
   const maxSizeMB = 5
   const maxSize = maxSizeMB * 1024 * 1024 // 5MB default
-  const maxFiles = 5
+  const maxFiles = 6
 
   // Convert FileWithPreview to FileMetadata if needed for initialFiles
   const initialFiles = value ? value.map(file => {
-    if ('name' in file.file && 'size' in file.file && 'type' in file.file && 'url' in file.file) {
-      return file.file as FileMetadata;
+    if (typeof file === 'object' && 'file' in file && 'preview' in file) {
+      return {
+        id: crypto.randomUUID(),
+        name: file.file.name,
+        size: file.file.size,
+        type: file.file.type,
+        url: file.preview
+      } as FileMetadata;
     }
-    // Handle File objects or any other case
-    return {
-      id: file.id,
-      name: file.file instanceof File ? file.file.name : 'unknown',
-      size: file.file instanceof File ? file.file.size : 0,
-      type: file.file instanceof File ? file.file.type : 'unknown',
-      url: file.preview || '',
-    } as FileMetadata;
-  }) : [];
+
+    // If it's a string (URL), create a minimal FileMetadata
+    if (typeof file === 'string') {
+      return {
+        id: crypto.randomUUID(),
+        name: 'unknown',
+        size: 0,
+        type: 'unknown',
+        url: file
+      } as FileMetadata;
+    }
+
+    return;
+  }).filter((file): file is FileMetadata => file !== undefined) : [];
 
   const [
     { files, isDragging, errors },
@@ -75,16 +86,16 @@ export function InputImage({ onChange, value }: InputImageProps) {
         onClick={openFileDialog}
         data-dragging={isDragging || undefined}
         data-files={files.length > 0 || undefined}
-        className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px] cursor-pointer dark:bg-input/30"
+        className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px] cursor-pointer"
       >
         <input
           {...getInputProps()}
-          className="sr-only dark:bg-input/30"
+          className="sr-only"
           aria-label="Upload image file"
         />
         <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
           <div
-            className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border border-[var(--border)] dark:bg-input/30"
+            className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border border-[var(--border)]"
             aria-hidden="true"
           >
             <ImageIcon className="size-4 opacity-60" />
@@ -112,7 +123,7 @@ export function InputImage({ onChange, value }: InputImageProps) {
           {files.map((file) => (
             <div
               key={file.id}
-              className="flex items-center justify-between gap-2 rounded-lg border border-[var(--border)] p-2 pe-3 dark:bg-input/30"
+              className="bg-background flex items-center justify-between gap-2 rounded-lg border border-[var(--border)] p-2 pe-3"
             >
               <div className="flex items-center gap-3 overflow-hidden">
                 <div className="bg-accent aspect-square shrink-0 rounded">
@@ -144,6 +155,7 @@ export function InputImage({ onChange, value }: InputImageProps) {
             </div>
           ))}
 
+          {/* Remove all files button */}
           {files.length > 1 && (
             <div>
               <Button size="sm" variant="outline" onClick={clearFiles}>
