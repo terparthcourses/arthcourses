@@ -4,9 +4,11 @@ import { api } from "@/lib/api-handler"
 // Constants
 import type { ArtworkFormValues } from "../consants"
 
-export const createArtwork = async (
-  values: ArtworkFormValues,
-) => {
+export const createArtwork = async ({
+  values
+}: {
+  values: ArtworkFormValues;
+}) => {
   try {
     const uploadedImages: string[] = [];
 
@@ -51,7 +53,7 @@ export const createArtwork = async (
       link: values.link || "",
       images: uploadedImages,
       periodTags: [],
-      mediumTags: values.mediumTags || [],
+      mediumTags: [],
       order: 0
     });
   } catch (error) {

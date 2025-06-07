@@ -131,7 +131,7 @@ export function ArtworkSelect({
             <ChevronsUpDownIcon className="size-4 text-muted-foreground/80" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0 border border-input" align="start">
+        <PopoverContent className="border border-input w-full min-w-[var(--radix-popper-anchor-width)] max-w-[var(--radix-popper-anchor-width)] p-0" align="start">
           <Command>
             <CommandInput placeholder="Search artworks..." />
             <CommandList>
@@ -151,10 +151,10 @@ export function ArtworkSelect({
                       <img
                         src={art.images[0]}
                         alt={art.title}
-                        className="size-12 rounded border object-cover"
+                        className="size-12 rounded border border-[var(--border)] object-cover"
                       />
                     ) : (
-                      <div className="size-12 rounded border bg-muted flex items-center justify-center">
+                      <div className="size-12 rounded border border-[var(--border)] bg-muted flex items-center justify-center">
                         <PaletteIcon className="size-4 text-muted-foreground" />
                       </div>
                     )}

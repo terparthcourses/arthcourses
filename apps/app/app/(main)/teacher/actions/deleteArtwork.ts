@@ -1,7 +1,11 @@
 // Utilities
 import { api } from '@/lib/api-handler'
 
-export async function deleteArtwork(artworkId: string) {
+export async function deleteArtwork({
+  artworkId
+}: {
+  artworkId: string;
+}) {
   try {
     // Submit the artwork
     await api.delete(`/api/artworks/${artworkId}`)

@@ -60,19 +60,6 @@ export function CourseForm({
     },
   })
 
-  useEffect(() => {
-    if (onSubmitType === "update" && course) {
-      form.reset({
-        title: course.title || "",
-        description: course.description || "",
-        artworkIds: (course.artworkIds ?? []) as string[],
-      })
-    }
-  }, [course, form, onSubmitType])
-
-  // State for loading
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleSubmit = async (values: CourseFormValues) => {
     console.log(values)
 
@@ -87,6 +74,19 @@ export function CourseForm({
       });
     }
   }
+
+  // State for loading
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (onSubmitType === "update" && course) {
+      form.reset({
+        title: course.title || "",
+        description: course.description || "",
+        artworkIds: (course.artworkIds ?? []) as string[],
+      })
+    }
+  }, [course, form, onSubmitType])
 
   if (isLoading) {
     return (

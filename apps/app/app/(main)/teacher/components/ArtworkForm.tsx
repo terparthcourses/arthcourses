@@ -76,6 +76,7 @@ export function ArtworkForm({
     }
   }
 
+  // State for loading
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

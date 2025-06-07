@@ -26,8 +26,12 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 
+// `CourseDialog` Components
+import { CourseDialog } from "./CourseDialog";
+
 // Constants
 import { type Course, type Artwork } from "@repo/database";
+import { type CourseFormValues } from "../consants";
 
 // Lucide Icons
 import {
@@ -45,9 +49,16 @@ interface CourseCardProps {
   }: {
     course: Course;
   }) => void;
+  onUpdate?: ({
+    course,
+    values
+  }: {
+    course: Course;
+    values: CourseFormValues;
+  }) => void;
 }
 
-export function CourseCard({ course, onDelete }: CourseCardProps) {
+export function CourseCard({ course, onDelete, onUpdate }: CourseCardProps) {
   const {
     id,
     title,
@@ -60,10 +71,21 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
   // State for alert dialog
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false)
 
-  const handleDelete = () => {
-    setIsAlertDialogOpen(false)
-    onDelete?.({ course })
-  }
+  // State for edit dialog
+  const [isCourseDialogOpen, setIsCourseDialogOpen] = useState(false)
+
+  // Handle alert dialog action
+  const handleAlertDialogAction = () => {
+    setIsAlertDialogOpen(false);
+    onDelete?.({
+      course: course,
+    });
+  };
+
+  // Handle alert dialog cancel
+  const handleAlertDialogCancel = () => {
+    setIsAlertDialogOpen(false);
+  };
 
   const formattedDate = (date?: Date | string) =>
     date
@@ -97,15 +119,15 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
 
             {artworks.length > 0 ? (
               <div className="space-y-2">
-                {artworks.slice(0, 3).map((art) => (
+                {artworks.slice(0, 3).map((artwork) => (
                   <div
-                    key={art.id}
+                    key={artwork.id}
                     className="flex w-full items-center gap-2 rounded-md border border-[var(--border)] bg-card px-3 py-2"
                   >
-                    {art.images?.length ? (
+                    {artwork.images?.length ? (
                       <img
-                        src={art.images[0]}
-                        alt={art.title}
+                        src={artwork.images[0]}
+                        alt={artwork.title}
                         className="size-12 rounded border border-[var(--border)] object-cover"
                       />
                     ) : (
@@ -114,12 +136,12 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
                       </div>
                     )}
                     <div className="min-w-0 flex-1 flex flex-col gap-0.25">
-                      <span className="truncate text-sm font-medium">{art.title}</span>
+                      <span className="truncate text-sm font-medium">{artwork.title}</span>
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <UserIcon className="size-3" />
-                        <span className="truncate">{art.author}</span>
+                        <span className="truncate">{artwork.author}</span>
                       </div>
-                      <span className="line-clamp-1 text-xs text-muted-foreground">{art.description}</span>
+                      <span className="line-clamp-1 text-xs text-muted-foreground">{artwork.description}</span>
                     </div>
                   </div>
                 ))}
@@ -151,13 +173,26 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
               <Trash2Icon className="h-3.5 w-3.5" />
               Delete
             </Button>
-            <Button variant="outline" size="sm" className="text-xs">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs"
+              onClick={() => setIsCourseDialogOpen(true)}
+            >
               <PencilIcon className="h-3.5 w-3.5" />
               Edit
             </Button>
           </div>
         </CardFooter>
       </Card>
+
+      <CourseDialog
+        isDialogOpen={isCourseDialogOpen}
+        setIsDialogOpen={setIsCourseDialogOpen}
+        onSubmit={onUpdate}
+        onSubmitType="update"
+        course={course}
+      />
 
       <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
         <AlertDialogContent>
@@ -169,11 +204,11 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsAlertDialogOpen(false)}>
+            <AlertDialogCancel onClick={handleAlertDialogCancel}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              Delete artwork
+            <AlertDialogAction onClick={handleAlertDialogAction}>
+              Delete course
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

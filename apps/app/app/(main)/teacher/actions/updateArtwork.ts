@@ -4,10 +4,13 @@ import { api } from "@/lib/api-handler"
 // Constants
 import type { ArtworkFormValues } from "../consants"
 
-export const updateArtwork = async (
-  artworkId: string,
-  values: ArtworkFormValues,
-) => {
+export const updateArtwork = async ({
+  artworkId,
+  values
+}: {
+  artworkId: string;
+  values: ArtworkFormValues;
+}) => {
   try {
     const uploadedImages: string[] = [];
     const existingImages: string[] = [];

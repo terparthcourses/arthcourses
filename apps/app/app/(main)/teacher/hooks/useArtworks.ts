@@ -24,24 +24,40 @@ export function useArtworks() {
   });
 
   const createArtworkMutation = useMutation({
-    mutationFn: (values: ArtworkFormValues) => createArtwork(values),
+    mutationFn: (values: ArtworkFormValues) => createArtwork({ values }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
+      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
     },
   });
 
   const updateArtworkMutation = useMutation({
-    mutationFn: (data: { id: string; values: ArtworkFormValues }) =>
-      updateArtwork(data.id, data.values),
+    mutationFn: ({
+      artworkId,
+      values
+    }: {
+      artworkId: string;
+      values: ArtworkFormValues;
+    }) =>
+      updateArtwork({
+        artworkId,
+        values,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
+      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
     },
   });
 
   const deleteArtworkMutation = useMutation({
-    mutationFn: (artworkId: string) => deleteArtwork(artworkId),
+    mutationFn: ({
+      artworkId
+    }: {
+      artworkId: string;
+    }) => deleteArtwork({ artworkId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
+      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
     },
   });
 

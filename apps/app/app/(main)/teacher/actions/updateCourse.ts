@@ -4,15 +4,17 @@ import { api } from '@/lib/api-handler'
 // Constants
 import type { CourseFormValues } from '../consants'
 
-export async function createCourse({
+export async function updateCourse({
+  courseId,
   values
 }: {
+  courseId: string;
   values: CourseFormValues;
 }) {
   try {
     // Submit the course
-    await api.post(`/api/courses`, values)
+    await api.put(`/api/courses/${courseId}`, values)
   } catch (error) {
-    console.error('Error creating course:', error)
+    console.error('Error updating course:', error)
   }
 }

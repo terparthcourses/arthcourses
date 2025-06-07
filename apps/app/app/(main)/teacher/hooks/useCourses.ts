@@ -8,6 +8,7 @@ import {
 // Actions
 import { createCourse } from '../actions/createCourse';
 import { getCourses } from '../actions/getCourses';
+import { updateCourse } from "../actions/updateCourse";
 import { deleteCourse } from "../actions/deleteCourse";
 
 // Constants
@@ -23,14 +24,35 @@ export function useCourses() {
   });
 
   const createCourseMutation = useMutation({
-    mutationFn: (values: CourseFormValues) => createCourse(values),
+    mutationFn: (values: CourseFormValues) => createCourse({ values }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
+    },
+  });
+
+  const updateCourseMutation = useMutation({
+    mutationFn: ({
+      courseId,
+      values
+    }: {
+      courseId: string;
+      values: CourseFormValues;
+    }) =>
+      updateCourse({
+        courseId,
+        values,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
     },
   });
 
   const deleteCourseMutation = useMutation({
-    mutationFn: (courseId: string) => deleteCourse(courseId),
+    mutationFn: ({
+      courseId
+    }: {
+      courseId: string;
+    }) => deleteCourse({ courseId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
     },
@@ -39,6 +61,7 @@ export function useCourses() {
   return {
     ...coursesQuery,
     createCourse: createCourseMutation,
+    updateCourse: updateCourseMutation,
     deleteCourse: deleteCourseMutation,
   };
 }

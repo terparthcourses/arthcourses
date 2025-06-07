@@ -57,8 +57,8 @@ export default function Page() {
     isLoading: isArtworksLoading,
     isError: isArtworksError,
     createArtwork,
-    deleteArtwork,
     updateArtwork,
+    deleteArtwork,
   } = useArtworks()
 
   const {
@@ -66,6 +66,7 @@ export default function Page() {
     isLoading: isCoursesLoading,
     isError: isCoursesError,
     createCourse,
+    updateCourse,
     deleteCourse,
   } = useCourses()
 
@@ -75,7 +76,7 @@ export default function Page() {
     artwork: Artwork;
   }) => {
     if (!artwork.id) return;
-    deleteArtwork.mutate(artwork.id);
+    deleteArtwork.mutate({ artworkId: artwork.id });
   };
 
   const handleUpdateArtwork = ({
@@ -87,7 +88,7 @@ export default function Page() {
   }) => {
     if (!artwork.id) return;
     updateArtwork.mutate({
-      id: artwork.id,
+      artworkId: artwork.id,
       values,
     });
   };
@@ -108,13 +109,27 @@ export default function Page() {
     createCourse.mutate(values);
   };
 
+  const handleUpdateCourse = ({
+    course,
+    values
+  }: {
+    course: Course;
+    values: CourseFormValues;
+  }) => {
+    if (!course.id) return;
+    updateCourse.mutate({
+      courseId: course.id,
+      values,
+    });
+  };
+
   const handleDeleteCourse = ({
     course
   }: {
     course: Course;
   }) => {
     if (!course.id) return;
-    deleteCourse.mutate(course.id);
+    deleteCourse.mutate({ courseId: course.id });
   };
 
   return (
@@ -222,6 +237,7 @@ export default function Page() {
                         key={course.id}
                         course={course}
                         onDelete={handleDeleteCourse}
+                        onUpdate={handleUpdateCourse}
                       />
                     ))}
                   </div>

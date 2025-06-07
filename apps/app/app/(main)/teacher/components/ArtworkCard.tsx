@@ -211,8 +211,12 @@ export function ArtworkCard({ artwork, onUpdate, onDelete }: ArtworkCardProps) {
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleAlertDialogCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleAlertDialogAction}>Delete artwork</AlertDialogAction>
+            <AlertDialogCancel onClick={handleAlertDialogCancel}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleAlertDialogAction}>
+              Delete artwork
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

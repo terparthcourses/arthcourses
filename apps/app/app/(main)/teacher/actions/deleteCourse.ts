@@ -1,7 +1,11 @@
 // Utilities
 import { api } from '@/lib/api-handler'
 
-export async function deleteCourse(courseId: string) {
+export async function deleteCourse({
+  courseId
+}: {
+  courseId: string;
+}) {
   try {
     // Submit the course
     await api.delete(`/api/courses/${courseId}`)
