@@ -3,6 +3,9 @@
 // React Hooks
 import { useState } from "react";
 
+// Utilities
+import { cn } from "@/lib/clsx-handler";
+
 // UI Components
 import {
   AlertDialog,
@@ -115,9 +118,9 @@ export function ArtworkCard({ artwork, onUpdate, onDelete }: ArtworkCardProps) {
       <Card
         className="flex h-full flex-col overflow-hidden"
       >
-        <CardHeader className="p-0">
-          <div className="relative h-72 w-full overflow-x-auto px-4 py-4">
-            {validImages.length > 0 && (
+        {validImages.length > 0 && (
+          <CardHeader className="p-0">
+            <div className="relative h-72 w-full overflow-x-auto px-4 py-4">
               <ScrollArea className="h-full w-full">
                 <div className="absolute inset-0 flex gap-4">
                   {validImages.map((url, index) => (
@@ -138,11 +141,11 @@ export function ArtworkCard({ artwork, onUpdate, onDelete }: ArtworkCardProps) {
                 </div>
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
-            )}
-          </div>
-        </CardHeader>
+            </div>
+          </CardHeader>
+        )}
 
-        <CardContent className="flex-grow space-y-4 px-6">
+        <CardContent className={cn("flex-grow space-y-4 px-6", validImages.length === 0 && "pt-6")}>
           <div>
             <h2 className="line-clamp-1 text-xl font-semibold text-foreground">{title}</h2>
             {author && <p className="mt-1 text-sm text-muted-foreground">by {author}</p>}

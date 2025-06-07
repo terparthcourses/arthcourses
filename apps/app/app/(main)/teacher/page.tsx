@@ -21,6 +21,9 @@ import { ArtworkDialog } from "./components/ArtworkDialog"
 // `ArtworkCard` Component
 import { ArtworkCard } from "./components/ArtworkCard"
 
+// `CourseDialog` Component
+import { CourseDialog } from "./components/CourseDialog"
+
 // React Query
 import { useArtworks } from "./hooks/useArtworks"
 
@@ -41,6 +44,9 @@ export default function Page() {
 
   // State for the artwork dialog
   const [isArtworkDialogOpen, setIsArtworkDialogOpen] = useState(false)
+
+  // State for the course dialog
+  const [isCourseDialogOpen, setIsCourseDialogOpen] = useState(false)
 
   const {
     data: artworks,
@@ -166,6 +172,7 @@ export default function Page() {
                   <h2 className="text-xl font-medium">Your Courses</h2>
                   <Button
                     size="sm"
+                    onClick={() => setIsCourseDialogOpen(true)}
                   >
                     <PlusIcon
                       size={16}
@@ -176,6 +183,13 @@ export default function Page() {
                 </div>
               </Container>
             </header>
+
+            <CourseDialog
+              isDialogOpen={isCourseDialogOpen}
+              setIsDialogOpen={setIsCourseDialogOpen}
+              onSubmit={() => { }}
+              onSubmitType="create"
+            />
           </>
         )
       }

@@ -16,3 +16,13 @@ export const artworkFormSchema = z.object({
 });
 
 export type ArtworkFormValues = z.infer<typeof artworkFormSchema>;
+
+// Course Form Schema
+
+export const courseFormSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  artworkIds: z.array(z.string()).default([]),
+});
+
+export type CourseFormValues = z.infer<typeof courseFormSchema>;
