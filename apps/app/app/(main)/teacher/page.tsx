@@ -26,10 +26,11 @@ import { CourseDialog } from "./components/CourseDialog"
 
 // React Query
 import { useArtworks } from "./hooks/useArtworks"
+import { useCourses } from "./hooks/useCourses"
 
 // Constants
-import { type Artwork } from "@repo/database";
-import { type ArtworkFormValues } from "./consants"
+import { type Artwork, type Course } from "@repo/database";
+import { type ArtworkFormValues, type CourseFormValues } from "./consants"
 
 // Lucide Icons
 import {
@@ -50,12 +51,19 @@ export default function Page() {
 
   const {
     data: artworks,
-    isLoading,
-    isError,
+    isLoading: isArtworksLoading,
+    isError: isArtworksError,
     createArtwork,
     deleteArtwork,
     updateArtwork,
   } = useArtworks()
+
+  const {
+    data: courses,
+    isLoading: isCoursesLoading,
+    isError: isCoursesError,
+    createCourse,
+  } = useCourses()
 
   const handleDeleteArtwork = ({
     artwork
@@ -86,6 +94,14 @@ export default function Page() {
     values: ArtworkFormValues;
   }) => {
     createArtwork.mutate(values);
+  };
+
+  const handleCreateCourse = ({
+    values
+  }: {
+    values: CourseFormValues;
+  }) => {
+    createCourse.mutate(values);
   };
 
   return (
@@ -187,7 +203,7 @@ export default function Page() {
             <CourseDialog
               isDialogOpen={isCourseDialogOpen}
               setIsDialogOpen={setIsCourseDialogOpen}
-              onSubmit={() => { }}
+              onSubmit={handleCreateCourse}
               onSubmitType="create"
             />
           </>

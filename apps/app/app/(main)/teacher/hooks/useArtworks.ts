@@ -1,9 +1,3 @@
-// Zod
-import { z } from 'zod';
-
-// Utilities
-import { api } from '@/lib/api-handler';
-
 // React Query
 import {
   useQuery,
@@ -13,12 +7,12 @@ import {
 
 // Actions
 import { createArtwork } from '../actions/createArtwork';
-import { deleteArtwork } from '../actions/deleteArtwork';
 import { getArtworks } from '../actions/getArtworks';
 import { updateArtwork } from '../actions/updateArtwork';
+import { deleteArtwork } from '../actions/deleteArtwork';
 
 // Constants
-import { artworkFormSchema, type ArtworkFormValues } from '../consants';
+import { type ArtworkFormValues } from '../consants';
 import { type Artwork } from '@repo/database';
 
 export function useArtworks() {
