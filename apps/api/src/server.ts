@@ -18,6 +18,7 @@ import { toNodeHandler } from 'better-auth/node';
 
 // Routes
 import artworksRouter from './routes/artworks.route';
+import coursesRouter from './routes/courses.route';
 import imagesRouter from './routes/images.route';
 import usersRouter from './routes/users.route';
 
@@ -61,6 +62,7 @@ export const createServer = (): Express => {
 
   // Mount routes
   app.use('/api/artworks', artworksRouter);
+  app.use('/api/courses', coursesRouter);
   app.use('/api/images', imagesRouter);
   app.use('/api/users', usersRouter);
 
