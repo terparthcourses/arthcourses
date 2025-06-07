@@ -55,8 +55,8 @@ import {
   UserIcon,
 } from "lucide-react"
 
-interface ArtworkMultiSelectProps {
-  value: string[] | undefined
+interface ArtworkSelectProps {
+  value?: string[]
   onChange: (value: string[]) => void
   disabled?: boolean
   className?: string
@@ -67,9 +67,9 @@ export function ArtworkSelect({
   onChange,
   disabled = false,
   className,
-}: ArtworkMultiSelectProps) {
+}: ArtworkSelectProps) {
   // State for popover
-  const [open, setOpen] = useState(false)
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   // State for artworks
   const [artworks, setArtworks] = useState<Artwork[]>([])
@@ -77,136 +77,92 @@ export function ArtworkSelect({
   // State for loading
   const [isLoading, setIsLoading] = useState(true)
 
-  // DnD-Kit Sensors
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
   useEffect(() => {
     const fetchArtworks = async () => {
+      setIsLoading(true)
       try {
-        setIsLoading(true)
-        const response = await api.get<Artwork[]>('/api/artworks')
-        setArtworks(response)
+        const data = await api.get<Artwork[]>('/api/artworks')
+        setArtworks(data)
       } catch (error) {
         console.error('Failed to fetch artworks:', error)
-        setArtworks([])
       } finally {
         setIsLoading(false)
       }
     }
-
     fetchArtworks()
   }, [])
 
-  // Get selected artworks
-  const selectedArtworks = value.map(id => artworks.find(artwork => artwork.id === id)).filter(Boolean) as Artwork[]
+  const selectedArtworks = value
+    .map((id) => artworks.find((art) => art.id === id))
+    .filter(Boolean) as Artwork[]
 
-  const handleSelect = (artworkId: string) => {
-    const isSelected = value.includes(artworkId)
-    if (isSelected) {
-      onChange(value.filter((id) => id !== artworkId))
-    } else {
-      onChange([...value, artworkId])
-    }
+  const toggleSelect = (id: string) => {
+    onChange(value.includes(id) ? value.filter(v => v !== id) : [...value, id])
   }
 
-  const handleRemove = (artworkId: string) => {
-    onChange(value.filter((id) => id !== artworkId))
-  }
-
-  const handleRemoveAll = () => {
-    onChange([])
-  }
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
-
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over && active.id !== over.id) {
-      const oldIndex = value.indexOf(active.id as string)
-      const newIndex = value.indexOf(over.id as string)
-
-      const newOrder = arrayMove(value, oldIndex, newIndex)
-      onChange(newOrder)
+      onChange(arrayMove(value, value.indexOf(active.id as string), value.indexOf(over.id as string)))
     }
   }
 
   return (
     <div className={cn("space-y-3", className)}>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
-            aria-expanded={open}
-            className="bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]"
+            aria-expanded={isPopoverOpen}
             disabled={disabled}
+            className="w-full justify-between border border-input bg-background px-3 font-normal hover:bg-background outline-none focus-visible:outline-[3px]"
           >
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <span className="flex items-center gap-2 text-muted-foreground">
               <PaletteIcon className="size-4" />
-              {selectedArtworks.length > 0
+              {selectedArtworks.length
                 ? `${selectedArtworks.length} artwork${selectedArtworks.length > 1 ? 's' : ''} selected`
-                : "Select artworks"
-              }
-            </div>
-            <ChevronsUpDownIcon
-              size={16}
-              className="text-muted-foreground/80 shrink-0"
-              aria-hidden="true"
-            />
+                : "Select artworks"}
+            </span>
+            <ChevronsUpDownIcon className="size-4 text-muted-foreground/80" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          className="border-input w-full min-w-[var(--radix-popper-anchor-width)] max-w-[var(--radix-popper-anchor-width)] p-0"
-          align="start"
-        >
+        <PopoverContent className="w-full p-0 border border-input" align="start">
           <Command>
             <CommandInput placeholder="Search artworks..." />
             <CommandList>
-              <CommandEmpty>
-                {isLoading ? "Loading artworks..." : "No artwork found."}
-              </CommandEmpty>
+              <CommandEmpty>{isLoading ? "Loading..." : "No artworks found."}</CommandEmpty>
               <CommandGroup>
-                {artworks.map((artwork) => (
+                {artworks.map((art) => (
                   <CommandItem
-                    key={artwork.id}
-                    value={artwork.title}
-                    onSelect={() => {
-                      handleSelect(artwork.id)
-                    }}
-                    className="flex items-center justify-between"
+                    key={art.id}
+                    onSelect={() => toggleSelect(art.id)}
+                    className="flex items-center gap-2"
                   >
-                    <div className="flex items-center w-full gap-2">
-                      <Checkbox
-                        checked={value.includes(artwork.id)}
-                        onCheckedChange={() => handleSelect(artwork.id)}
+                    <Checkbox
+                      checked={value.includes(art.id)}
+                      onCheckedChange={() => toggleSelect(art.id)}
+                    />
+                    {art.images?.length ? (
+                      <img
+                        src={art.images[0]}
+                        alt={art.title}
+                        className="size-12 rounded border object-cover"
                       />
-                      {artwork.images && artwork.images.length > 0 ? (
-                        <img
-                          src={artwork.images[0]}
-                          alt={artwork.title}
-                          className="size-12 rounded object-cover"
-                        />
-                      ) : (
-                        <div className="size-12 rounded bg-muted flex items-center justify-center">
-                          <PaletteIcon className="text-muted-foreground size-4" />
-                        </div>
-                      )}
-                      <div className="flex flex-col gap-0.25 min-w-0 flex-1">
-                        <span className="font-medium truncate">{artwork.title}</span>
-                        <div className="flex items-center gap-1 text-muted-foreground text-xs">
-                          <UserIcon className="size-3" />
-                          <span className="truncate">{artwork.author}</span>
-                        </div>
-                        <span className="text-muted-foreground text-xs line-clamp-1">{artwork.description}</span>
+                    ) : (
+                      <div className="size-12 rounded border bg-muted flex items-center justify-center">
+                        <PaletteIcon className="size-4 text-muted-foreground" />
                       </div>
+                    )}
+                    <div className="flex-1 truncate">
+                      <span className="block truncate font-medium">{art.title}</span>
+                      <span className="text-xs text-muted-foreground truncate">
+                        <UserIcon className="inline size-3 mr-1" /> {art.author}
+                      </span>
                     </div>
                   </CommandItem>
                 ))}
@@ -217,33 +173,22 @@ export function ArtworkSelect({
       </Popover>
 
       {selectedArtworks.length > 0 && (
-        <div className="space-y-2">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext items={value} strategy={verticalListSortingStrategy}>
-              <div className="flex flex-col gap-2">
-                {selectedArtworks.map((artwork) => (
-                  <ArtworkSelectItem
-                    key={artwork.id}
-                    artwork={artwork}
-                    onRemove={handleRemove}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-          {selectedArtworks.length > 0 && (
-            <div className="mt-3">
-              <Button size="sm" variant="outline" onClick={handleRemoveAll}>
-                Remove all artworks
-              </Button>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={value} strategy={verticalListSortingStrategy}>
+            <div className="flex flex-col gap-2">
+              {selectedArtworks.map((art) => (
+                <ArtworkSelectItem key={art.id} artwork={art} onRemove={(id) => toggleSelect(id)} />
+              ))}
             </div>
-          )}
-        </div>
+          </SortableContext>
+        </DndContext>
+      )}
+
+      {selectedArtworks.length > 0 && (
+        <Button size="sm" variant="outline" onClick={() => onChange([])}>
+          Remove all artworks
+        </Button>
       )}
     </div>
   )
-} 
+}

@@ -54,25 +54,16 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
     description,
     artworks = [],
     updatedAt,
-  } = course;
+    createdAt
+  } = course
 
   // State for alert dialog
-  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false)
 
-
-  // Handle alert dialog action
-  const handleAlertDialogAction = () => {
-    setIsAlertDialogOpen(false);
-    onDelete?.({
-      course: course,
-    });
-  };
-
-  // Handle alert dialog cancel
-  const handleAlertDialogCancel = () => {
-    setIsAlertDialogOpen(false);
-  };
-
+  const handleDelete = () => {
+    setIsAlertDialogOpen(false)
+    onDelete?.({ course })
+  }
 
   const formattedDate = (date?: Date | string) =>
     date
@@ -81,55 +72,54 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
         month: "short",
         day: "numeric",
       })
-      : "N/A";
+      : "N/A"
 
   return (
     <>
       <Card className="flex h-full flex-col overflow-hidden">
         <CardHeader className="py-6">
           <div className="flex items-center gap-3">
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <h3 className="line-clamp-1 text-xl font-semibold text-foreground">{title}</h3>
-              <p className="line-clamp-2 mt-1 text-sm text-muted-foreground">{description}</p>
+              <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{description}</p>
             </div>
           </div>
         </CardHeader>
 
         <CardContent className="flex-grow px-6">
           <div>
-            <h4 className="text-md font-medium text-foreground mb-2 flex items-center justify-between gap-2">
+            <h4 className="mb-2 flex items-center justify-between gap-2 text-md font-medium text-foreground">
               Artworks
-              <Badge className="h-5 min-w-5 rounded-sm px-1 text-xs tabular-nums bg-primary/10 text-primary">
-                {artworks.length} artwork{artworks.length > 1 ? 's' : ''}
+              <Badge className="bg-primary/10 text-primary h-5 min-w-5 rounded-sm px-1 text-xs tabular-nums">
+                {artworks.length} artwork{artworks.length > 1 ? "s" : ""}
               </Badge>
             </h4>
+
             {artworks.length > 0 ? (
               <div className="space-y-2">
-                {artworks.slice(0, 3).map((artwork, index) => (
+                {artworks.slice(0, 3).map((art) => (
                   <div
-                    key={artwork.id}
-                    className="flex items-center w-full gap-2 bg-card px-3 py-2 rounded-md border border-[var(--border)]"
+                    key={art.id}
+                    className="flex w-full items-center gap-2 rounded-md border border-[var(--border)] bg-card px-3 py-2"
                   >
-                    <div className="flex items-center w-full gap-2">
-                      {artwork.images && artwork.images.length > 0 ? (
-                        <img
-                          src={artwork.images[0]}
-                          alt={artwork.title}
-                          className="size-12 rounded object-cover"
-                        />
-                      ) : (
-                        <div className="size-12 rounded bg-muted flex items-center justify-center">
-                          <PaletteIcon className="text-muted-foreground size-4" />
-                        </div>
-                      )}
-                      <div className="flex flex-col gap-0.25 min-w-0 flex-1">
-                        <span className="text-sm font-medium truncate">{artwork.title}</span>
-                        <div className="flex items-center gap-1 text-muted-foreground text-xs">
-                          <UserIcon className="size-3" />
-                          <span className="truncate">{artwork.author}</span>
-                        </div>
-                        <span className="text-muted-foreground text-xs line-clamp-1">{artwork.description}</span>
+                    {art.images?.length ? (
+                      <img
+                        src={art.images[0]}
+                        alt={art.title}
+                        className="size-12 rounded border border-[var(--border)] object-cover"
+                      />
+                    ) : (
+                      <div className="size-12 flex items-center justify-center rounded border border-[var(--border)] bg-muted">
+                        <PaletteIcon className="size-4 text-muted-foreground" />
                       </div>
+                    )}
+                    <div className="min-w-0 flex-1 flex flex-col gap-0.25">
+                      <span className="truncate text-sm font-medium">{art.title}</span>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <UserIcon className="size-3" />
+                        <span className="truncate">{art.author}</span>
+                      </div>
+                      <span className="line-clamp-1 text-xs text-muted-foreground">{art.description}</span>
                     </div>
                   </div>
                 ))}
@@ -147,7 +137,7 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
 
         <CardFooter className="flex items-center justify-between border-t px-6 py-4">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <ClockIcon className="h-3.5 w-3.5 mr-1" />
+            <ClockIcon className="mr-1 h-3.5 w-3.5" />
             Last updated {formattedDate(updatedAt)}
           </div>
 
@@ -161,12 +151,7 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
               <Trash2Icon className="h-3.5 w-3.5" />
               Delete
             </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-xs"
-            >
+            <Button variant="outline" size="sm" className="text-xs">
               <PencilIcon className="h-3.5 w-3.5" />
               Edit
             </Button>
@@ -184,11 +169,15 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleAlertDialogCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleAlertDialogAction}>Delete artwork</AlertDialogAction>
+            <AlertDialogCancel onClick={() => setIsAlertDialogOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              Delete artwork
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
+  )
 }

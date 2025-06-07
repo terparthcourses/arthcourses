@@ -86,7 +86,7 @@ export function InputImage({ onChange, value }: InputImageProps) {
         onClick={openFileDialog}
         data-dragging={isDragging || undefined}
         data-files={files.length > 0 || undefined}
-        className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px] cursor-pointer"
+        className="border-input dark:bg-input/30 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px] cursor-pointer"
       >
         <input
           {...getInputProps()}
@@ -95,7 +95,7 @@ export function InputImage({ onChange, value }: InputImageProps) {
         />
         <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
           <div
-            className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border border-[var(--border)]"
+            className="dark:bg-input/30 mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border border-input"
             aria-hidden="true"
           >
             <ImageIcon className="size-4 opacity-60" />
@@ -123,7 +123,7 @@ export function InputImage({ onChange, value }: InputImageProps) {
           {files.map((file) => (
             <div
               key={file.id}
-              className="bg-card flex items-center justify-between gap-2 rounded-lg border border-[var(--border)] p-2 pe-3"
+              className="dark:bg-input/30 flex items-center justify-between gap-2 rounded-lg border border-input p-2 pe-3"
             >
               <div className="flex items-center gap-3 overflow-hidden">
                 <div className="bg-accent aspect-square shrink-0 rounded">

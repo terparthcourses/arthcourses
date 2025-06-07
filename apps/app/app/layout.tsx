@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-card/25`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-card/50`}
       >
         <ReactQueryProvider>
           <AuthProvider>

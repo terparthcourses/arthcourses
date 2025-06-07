@@ -26,10 +26,7 @@ interface ArtworkSelectItemProps {
   onRemove: (artworkId: string) => void
 }
 
-export function ArtworkSelectItem({
-  artwork,
-  onRemove
-}: ArtworkSelectItemProps) {
+export function ArtworkSelectItem({ artwork, onRemove }: ArtworkSelectItemProps) {
   const {
     attributes,
     listeners,
@@ -49,42 +46,39 @@ export function ArtworkSelectItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center w-full gap-2 bg-card px-3 py-2 rounded-md border border-[var(--border)]",
+        "flex w-full items-center gap-2 rounded-md border border-input bg-card px-3 py-2 dark:bg-input/30",
         isDragging && "opacity-50"
       )}
     >
-      <div
-        {...attributes}
-        {...listeners}
-        className="cursor-grab active:cursor-grabbing"
-      >
+      <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
         <GripVerticalIcon className="size-4 text-muted-foreground" />
       </div>
 
-      {artwork.images && artwork.images.length > 0 ? (
+      {artwork.images?.length ? (
         <img
           src={artwork.images[0]}
           alt={artwork.title}
-          className="size-12 rounded object-cover"
+          className="size-12 rounded border border-[var(--border)] object-cover"
         />
       ) : (
-        <div className="size-12 rounded bg-muted flex items-center justify-center">
-          <PaletteIcon className="text-muted-foreground size-4" />
+        <div className="size-12 flex items-center justify-center rounded border border-[var(--border)] bg-muted">
+          <PaletteIcon className="size-4 text-muted-foreground" />
         </div>
       )}
-      <div className="flex flex-col gap-0.25 min-w-0 flex-1">
-        <span className="text-sm font-medium truncate">{artwork.title}</span>
-        <div className="flex items-center gap-1 text-muted-foreground text-xs">
+
+      <div className="flex min-w-0 flex-1 flex-col gap-0.25">
+        <span className="truncate text-sm font-medium">{artwork.title}</span>
+        <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <UserIcon className="size-3" />
           <span className="truncate">{artwork.author}</span>
         </div>
-        <span className="text-muted-foreground text-xs line-clamp-1">{artwork.description}</span>
+        <span className="line-clamp-1 text-xs text-muted-foreground">{artwork.description}</span>
       </div>
 
       <Button
         size="icon"
         variant="ghost"
-        className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
+        className="-me-2 size-8 text-muted-foreground/80 hover:bg-transparent hover:text-foreground"
         onClick={() => onRemove(artwork.id)}
         aria-label="Remove artwork"
       >
@@ -92,4 +86,4 @@ export function ArtworkSelectItem({
       </Button>
     </div>
   )
-} 
+}
