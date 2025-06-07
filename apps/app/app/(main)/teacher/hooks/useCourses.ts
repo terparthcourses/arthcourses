@@ -16,8 +16,8 @@ import { type Course } from '@repo/database';
 export function useCourses() {
   const queryClient = useQueryClient();
 
-  const artworksQuery = useQuery<Course[]>({
-    queryKey: ['teacher-artworks'],
+  const coursesQuery = useQuery<Course[]>({
+    queryKey: ['teacher-courses'],
     queryFn: () => getCourses(),
   });
 
@@ -29,7 +29,7 @@ export function useCourses() {
   });
 
   return {
-    ...artworksQuery,
+    ...coursesQuery,
     createCourse: createCourseMutation,
   };
 }

@@ -24,6 +24,9 @@ import { ArtworkCard } from "./components/ArtworkCard"
 // `CourseDialog` Component
 import { CourseDialog } from "./components/CourseDialog"
 
+// `CourseCard` Component
+import { CourseCard } from "./components/CourseCard"
+
 // React Query
 import { useArtworks } from "./hooks/useArtworks"
 import { useCourses } from "./hooks/useCourses"
@@ -199,6 +202,21 @@ export default function Page() {
                 </div>
               </Container>
             </header>
+
+            <main className="mb-16">
+              <Container>
+                {courses && courses.length > 0 && (
+                  <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6">
+                    {courses.map((course) => (
+                      <CourseCard
+                        key={course.id}
+                        course={course}
+                      />
+                    ))}
+                  </div>
+                )}
+              </Container>
+            </main>
 
             <CourseDialog
               isDialogOpen={isCourseDialogOpen}
