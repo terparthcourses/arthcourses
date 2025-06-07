@@ -63,7 +63,9 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
   // Handle alert dialog action
   const handleAlertDialogAction = () => {
     setIsAlertDialogOpen(false);
-    // TODO: Delete course
+    onDelete?.({
+      course: course,
+    });
   };
 
   // Handle alert dialog cancel
@@ -87,8 +89,8 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
         <CardHeader className="py-6">
           <div className="flex items-center gap-3">
             <div className="flex-1 min-w-0">
-              <h3 className="line-clamp-1 text-lg font-semibold text-foreground">{title}</h3>
-              <p className="line-clamp-2 text-sm text-muted-foreground">{description}</p>
+              <h3 className="line-clamp-1 text-xl font-semibold text-foreground">{title}</h3>
+              <p className="line-clamp-2 mt-1 text-sm text-muted-foreground">{description}</p>
             </div>
           </div>
         </CardHeader>
@@ -98,7 +100,7 @@ export function CourseCard({ course, onDelete }: CourseCardProps) {
             <h4 className="text-md font-medium text-foreground mb-2 flex items-center justify-between gap-2">
               Artworks
               <Badge className="h-5 min-w-5 rounded-sm px-1 text-xs tabular-nums bg-primary/10 text-primary">
-                {artworks.length} artworks
+                {artworks.length} artwork{artworks.length > 1 ? 's' : ''}
               </Badge>
             </h4>
             {artworks.length > 0 ? (

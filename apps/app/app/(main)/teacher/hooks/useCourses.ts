@@ -8,6 +8,7 @@ import {
 // Actions
 import { createCourse } from '../actions/createCourse';
 import { getCourses } from '../actions/getCourses';
+import { deleteCourse } from "../actions/deleteCourse";
 
 // Constants
 import { type CourseFormValues } from '../consants';
@@ -28,8 +29,16 @@ export function useCourses() {
     },
   });
 
+  const deleteCourseMutation = useMutation({
+    mutationFn: (courseId: string) => deleteCourse(courseId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
+    },
+  });
+
   return {
     ...coursesQuery,
     createCourse: createCourseMutation,
+    deleteCourse: deleteCourseMutation,
   };
 }

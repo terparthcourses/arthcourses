@@ -66,6 +66,7 @@ export default function Page() {
     isLoading: isCoursesLoading,
     isError: isCoursesError,
     createCourse,
+    deleteCourse,
   } = useCourses()
 
   const handleDeleteArtwork = ({
@@ -105,6 +106,15 @@ export default function Page() {
     values: CourseFormValues;
   }) => {
     createCourse.mutate(values);
+  };
+
+  const handleDeleteCourse = ({
+    course
+  }: {
+    course: Course;
+  }) => {
+    if (!course.id) return;
+    deleteCourse.mutate(course.id);
   };
 
   return (
@@ -161,7 +171,7 @@ export default function Page() {
             <main className="mb-16">
               <Container>
                 {artworks && artworks.length > 0 && (
-                  <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6">
+                  <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6 break-inside-avoid">
                     {artworks.map((artwork) => (
                       <div key={artwork.id} className="break-inside-avoid">
                         <ArtworkCard
@@ -206,11 +216,12 @@ export default function Page() {
             <main className="mb-16">
               <Container>
                 {courses && courses.length > 0 && (
-                  <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6">
+                  <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6 break-inside-avoid">
                     {courses.map((course) => (
                       <CourseCard
                         key={course.id}
                         course={course}
+                        onDelete={handleDeleteCourse}
                       />
                     ))}
                   </div>
