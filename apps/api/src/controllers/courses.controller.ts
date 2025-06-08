@@ -304,6 +304,60 @@ class CoursesController {
       });
     }
   }
+
+  async toggleIsPublished(req: Request, res: Response) {
+    try {
+      const { courseId } = req.params;
+
+      if (!courseId) {
+        return res.status(400).json({
+          message: 'Bad Request'
+        });
+      }
+
+      const session = await auth.api.getSession({
+        headers: fromNodeHeaders(req.headers),
+      });
+
+      if (!session || !session.user) {
+        return res.status(401).json({
+          message: 'Unauthorized'
+        });
+      }
+
+      const userId = session.user.id;
+
+      const existingCourse = await db.select()
+        .from(schema.courses)
+        .where(
+          and(
+            eq(schema.courses.id, courseId),
+            eq(schema.courses.userId, userId)
+          )
+        );
+
+      if (!existingCourse || existingCourse.length === 0 || !existingCourse[0]) {
+        return res.status(404).json({
+          message: 'Not Found'
+        });
+      }
+
+      const updatedCourse = await db.update(schema.courses)
+        .set({
+          isPublished: !existingCourse[0].isPublished,
+          updatedAt: new Date()
+        })
+        .where(eq(schema.courses.id, courseId))
+        .returning();
+
+      return res.status(200).json(updatedCourse[0]);
+    } catch (error: any) {
+      console.error("Error publishing or unpublishing course:", error);
+      return res.status(500).json({
+        message: 'Internal Server Error'
+      });
+    }
+  }
 }
 
 export const coursesController = new CoursesController();

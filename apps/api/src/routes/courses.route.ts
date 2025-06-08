@@ -15,5 +15,6 @@ router.get('/', asyncHandler(coursesController.getCoursesByUser));
 router.get('/:courseId', asyncHandler(coursesController.getCourseById));
 router.put('/:courseId', asyncHandler(coursesController.updateCourse));
 router.delete('/:courseId', asyncHandler(coursesController.deleteCourse));
+router.put('/:courseId/is-published', asyncHandler(coursesController.toggleIsPublished));
 
 export default router;
