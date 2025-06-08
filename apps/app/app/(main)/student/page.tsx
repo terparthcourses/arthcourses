@@ -35,19 +35,11 @@ export default function Page() {
 
   return (
     <>
-      <header>
+      <main className="mb-8">
         <Container className="py-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-medium">Courses</h2>
-          </div>
-        </Container>
-      </header>
-
-      <main className="mb-16">
-        <Container>
           {enrolledCourses.length > 0 && (
-            <section className="mb-10">
-              <h3 className="text-lg font-semibold mb-4">Enrolled Courses</h3>
+            <section>
+              <h3 className="text-xl font-medium mb-4">Enrolled Courses</h3>
               <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6 break-inside-avoid">
                 {enrolledCourses.map((course: any) => (
                   <CourseCard
@@ -61,8 +53,8 @@ export default function Page() {
           )}
 
           {unenrolledCourses.length > 0 && (
-            <section>
-              <h3 className="text-lg font-semibold mb-4">Available Courses</h3>
+            <section className="py-4">
+              <h3 className="text-xl font-medium mb-4">Unenrolled Courses</h3>
               <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6 break-inside-avoid">
                 {unenrolledCourses.map((course: any) => (
                   <CourseCard

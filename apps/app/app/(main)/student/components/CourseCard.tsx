@@ -21,15 +21,16 @@ import { type Course, type Artwork } from "@repo/database";
 
 // Icons
 import {
+  ArrowRightIcon,
+  ClockIcon,
   GraduationCapIcon,
   PaletteIcon,
   UserIcon,
   UsersIcon,
-  ArrowRightIcon,
 } from "lucide-react";
 
 interface CourseCardProps {
-  course: Course & { artworks?: Artwork[] };
+  course: Course & { artworks?: Artwork[], studentsEnrolled: number };
   type: "enrolled" | "unenrolled";
 }
 
@@ -113,6 +114,7 @@ export function CourseCard({ course, type }: CourseCardProps) {
         {isEnrolled ? (
           <>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <ClockIcon className="h-3.5 w-3.5 mr-0.5" />
               {progress}% completed
             </div>
             <div className="flex gap-2">
@@ -130,8 +132,8 @@ export function CourseCard({ course, type }: CourseCardProps) {
         ) : (
           <>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <UsersIcon className="h-3.5 w-3.5 mr-1" />
-              0 students
+              <UsersIcon className="h-3.5 w-3.5 mr-0.5" />
+              {course.studentsEnrolled} student{course.studentsEnrolled !== 1 ? "s" : ""}
             </div>
             <div className="flex gap-2">
               <Button

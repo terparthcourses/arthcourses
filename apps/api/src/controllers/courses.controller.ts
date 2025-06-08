@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 // Drizzle ORM
 import { db } from '@repo/database';
 import { schema } from '@repo/database';
-import { eq, and, inArray } from 'drizzle-orm';
+import { eq, and, inArray, sql } from 'drizzle-orm';
 
 // Better-Auth
 import { auth } from '../lib/auth';
@@ -366,7 +366,7 @@ class CoursesController {
         .from(schema.courses)
         .where(eq(schema.courses.isPublished, true));
 
-      // For each course, fetch full artwork objects in the correct order
+      // For each course, fetch full artwork objects in the correct order and count enrollments
       const result = await Promise.all(courses.map(async (course: any) => {
         let artworks: any[] = [];
         if (Array.isArray(course.artworkIds) && course.artworkIds.length > 0) {
@@ -378,9 +378,22 @@ class CoursesController {
             .map((id: string) => fetchedArtworks.find((a: any) => a.id === id))
             .filter(Boolean);
         }
+
+        // Count enrollments for this course
+        const enrollmentCountResult = await db
+          .select({ count: sql`COUNT(*)::int` })
+          .from(schema.enrollments)
+          .where(eq(schema.enrollments.courseId, course.id));
+
+        const studentsEnrolled =
+          Array.isArray(enrollmentCountResult) && enrollmentCountResult[0] && typeof enrollmentCountResult[0].count === 'number'
+            ? enrollmentCountResult[0].count
+            : 0;
+
         return {
           ...course,
           artworks,
+          studentsEnrolled,
         };
       }));
 
