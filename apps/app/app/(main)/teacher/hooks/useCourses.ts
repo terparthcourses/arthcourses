@@ -10,6 +10,7 @@ import { createCourse } from '../actions/createCourse';
 import { getCourses } from '../actions/getCourses';
 import { updateCourse } from "../actions/updateCourse";
 import { deleteCourse } from "../actions/deleteCourse";
+import { toggleIsPublished } from "../actions/toggleIsPublished";
 
 // Constants
 import { type CourseFormValues } from '../consants';
@@ -58,10 +59,22 @@ export function useCourses() {
     },
   });
 
+  const toggleIsPublishedMutation = useMutation({
+    mutationFn: ({
+      courseId
+    }: {
+      courseId: string;
+    }) => toggleIsPublished({ courseId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
+    },
+  });
+
   return {
     ...coursesQuery,
     createCourse: createCourseMutation,
     updateCourse: updateCourseMutation,
     deleteCourse: deleteCourseMutation,
+    toggleIsPublished: toggleIsPublishedMutation,
   };
 }

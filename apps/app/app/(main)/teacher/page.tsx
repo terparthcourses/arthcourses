@@ -68,6 +68,7 @@ export default function Page() {
     createCourse,
     updateCourse,
     deleteCourse,
+    toggleIsPublished,
   } = useCourses()
 
   const handleDeleteArtwork = ({
@@ -130,6 +131,15 @@ export default function Page() {
   }) => {
     if (!course.id) return;
     deleteCourse.mutate({ courseId: course.id });
+  };
+
+  const handleToggleIsPublished = ({
+    course
+  }: {
+    course: Course;
+  }) => {
+    if (!course.id) return;
+    toggleIsPublished.mutate({ courseId: course.id });
   };
 
   return (
@@ -238,6 +248,7 @@ export default function Page() {
                         course={course}
                         onDelete={handleDeleteCourse}
                         onUpdate={handleUpdateCourse}
+                        onTogglePublish={handleToggleIsPublished}
                       />
                     ))}
                   </div>

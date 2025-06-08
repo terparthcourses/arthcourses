@@ -36,6 +36,8 @@ import { type CourseFormValues } from "../consants";
 // Lucide Icons
 import {
   ClockIcon,
+  CircleDotDashedIcon,
+  CircleDotIcon,
   PencilIcon,
   PaletteIcon,
   UserIcon,
@@ -56,16 +58,20 @@ interface CourseCardProps {
     course: Course;
     values: CourseFormValues;
   }) => void;
+  onTogglePublish?: ({
+    course
+  }: {
+    course: Course;
+  }) => void;
 }
 
-export function CourseCard({ course, onDelete, onUpdate }: CourseCardProps) {
+export function CourseCard({ course, onDelete, onUpdate, onTogglePublish }: CourseCardProps) {
   const {
     id,
     title,
     description,
     artworks = [],
-    updatedAt,
-    createdAt
+    isPublished
   } = course
 
   // State for alert dialog
@@ -86,15 +92,6 @@ export function CourseCard({ course, onDelete, onUpdate }: CourseCardProps) {
   const handleAlertDialogCancel = () => {
     setIsAlertDialogOpen(false);
   };
-
-  const formattedDate = (date?: Date | string) =>
-    date
-      ? new Date(date).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
-      : "N/A"
 
   return (
     <>
@@ -158,10 +155,19 @@ export function CourseCard({ course, onDelete, onUpdate }: CourseCardProps) {
         </CardContent>
 
         <CardFooter className="flex items-center justify-between border-t px-6 py-4">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <ClockIcon className="mr-1 h-3.5 w-3.5" />
-            Last updated {formattedDate(updatedAt)}
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-xs"
+            onClick={() => onTogglePublish?.({ course })}
+          >
+            {isPublished ? (
+              <CircleDotDashedIcon className="h-3.5 w-3.5" />
+            ) : (
+              <CircleDotIcon className="h-3.5 w-3.5" />
+            )}
+            {isPublished ? "Unpublish" : "Publish"}
+          </Button>
 
           <div className="flex gap-2">
             <Button
