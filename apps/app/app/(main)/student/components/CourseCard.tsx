@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { useEnrollments } from '../hooks/useEnrollments';
 
 // Constants
-import { type Course, type Artwork } from "@repo/database";
+import { type Course, type Artwork, type Completion } from "@repo/database";
 
 // Icons
 import {
@@ -32,9 +32,10 @@ import {
 interface CourseCardProps {
   course: Course & { artworks?: Artwork[], studentsEnrolled: number };
   type: "enrolled" | "unenrolled";
+  completions?: Completion[];
 }
 
-export function CourseCard({ course, type }: CourseCardProps) {
+export function CourseCard({ course, type, completions = [] }: CourseCardProps) {
   const router = useRouter();
 
   const {
@@ -48,7 +49,9 @@ export function CourseCard({ course, type }: CourseCardProps) {
   } = useEnrollments();
 
   const isEnrolled = type === "enrolled";
-  const progress = 42;
+  const progress = isEnrolled && completions.length > 0
+    ? Math.round((completions.filter(c => c.isCompleted).length / completions.length) * 100)
+    : 0;
 
   return (
     <Card className="flex h-full flex-col overflow-hidden">
