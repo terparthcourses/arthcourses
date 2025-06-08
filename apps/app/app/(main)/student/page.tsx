@@ -9,37 +9,70 @@ import Container from '@/components/container';
 import { CourseCard } from './components/CourseCard';
 
 // Hooks
+import { useEnrollments } from './hooks/useEnrollments';
 import { usePublishedCourses } from './hooks/usePublishedCourses';
 
 export default function Page() {
+  const {
+    data: enrollments,
+    isLoading: isEnrollmentsLoading,
+    isError: isEnrollmentsError,
+    createEnrollment
+  } = useEnrollments();
+
   const {
     data: publishedCourses,
     isLoading: isPublishedCoursesLoading,
     isError: isPublishedCoursesError
   } = usePublishedCourses();
 
+  // Get enrolled course IDs from enrollments
+  const enrolledCourseIds = enrollments?.map((enrollment: any) => enrollment.courseId) || [];
+
+  // Filter published courses into enrolled and unenrolled
+  const enrolledCourses = publishedCourses?.filter((course: any) => enrolledCourseIds.includes(course.id)) || [];
+  const unenrolledCourses = publishedCourses?.filter((course: any) => !enrolledCourseIds.includes(course.id)) || [];
+
   return (
     <>
       <header>
         <Container className="py-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-medium">Available Courses</h2>
+            <h2 className="text-xl font-medium">Courses</h2>
           </div>
         </Container>
       </header>
 
       <main className="mb-16">
         <Container>
-          {publishedCourses && publishedCourses.length > 0 && (
-            <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6 break-inside-avoid">
-              {publishedCourses.map((course) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  enrollmentStatus="unenrolled"
-                />
-              ))}
-            </div>
+          {enrolledCourses.length > 0 && (
+            <section className="mb-10">
+              <h3 className="text-lg font-semibold mb-4">Enrolled Courses</h3>
+              <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6 break-inside-avoid">
+                {enrolledCourses.map((course: any) => (
+                  <CourseCard
+                    key={course.id}
+                    course={course}
+                    type="enrolled"
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {unenrolledCourses.length > 0 && (
+            <section>
+              <h3 className="text-lg font-semibold mb-4">Available Courses</h3>
+              <div className="columns-1 lg:columns-2 xl:columns-3 gap-6 space-y-6 break-inside-avoid">
+                {unenrolledCourses.map((course: any) => (
+                  <CourseCard
+                    key={course.id}
+                    course={course}
+                    type="unenrolled"
+                  />
+                ))}
+              </div>
+            </section>
           )}
         </Container>
       </main>
