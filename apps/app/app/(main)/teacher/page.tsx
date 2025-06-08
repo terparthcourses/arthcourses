@@ -3,7 +3,7 @@
 "use client"
 
 // React Hooks
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -43,8 +43,17 @@ import {
 } from "lucide-react"
 
 export default function Page() {
+  // State to track if component has mounted
+  const [hasMounted, setHasMounted] = useState(false);
+
   // State for the active tab
-  const [activeTab, setActiveTab] = useState("artworks")
+  const [activeTab, setActiveTab] = useState("artworks");
+
+  useEffect(() => {
+    const storedActiveTab = localStorage.getItem("teacher-active-tab");
+    if (storedActiveTab) setActiveTab(storedActiveTab);
+    setHasMounted(true);
+  }, []);
 
   // State for the artwork dialog
   const [isArtworkDialogOpen, setIsArtworkDialogOpen] = useState(false)
@@ -70,6 +79,11 @@ export default function Page() {
     deleteCourse,
     toggleIsPublished,
   } = useCourses()
+
+  const handleSetActiveTab = (value: string) => {
+    setActiveTab(value);
+    localStorage.setItem("teacher-active-tab", value);
+  };
 
   const handleDeleteArtwork = ({
     artwork
@@ -142,11 +156,14 @@ export default function Page() {
     toggleIsPublished.mutate({ courseId: course.id });
   };
 
+  // Don't render until mounted to avoid hydration mismatch
+  if (!hasMounted) return null;
+
   return (
     <>
       <header className="border-b border-[var(--border)]">
         <Container className="py-2">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <Tabs value={activeTab} onValueChange={handleSetActiveTab}>
             <ScrollArea>
               <TabsList>
                 <TabsTrigger value="artworks" className="group">
