@@ -28,6 +28,7 @@ export function useCourses() {
     mutationFn: (values: CourseFormValues) => createCourse({ values }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
+      queryClient.invalidateQueries({ queryKey: ['published-courses'] });
     },
   });
 
@@ -45,6 +46,7 @@ export function useCourses() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
+      queryClient.invalidateQueries({ queryKey: ['published-courses'] });
     },
   });
 
@@ -56,6 +58,7 @@ export function useCourses() {
     }) => deleteCourse({ courseId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
+      queryClient.invalidateQueries({ queryKey: ['published-courses'] });
     },
   });
 
@@ -67,6 +70,7 @@ export function useCourses() {
     }) => toggleIsPublished({ courseId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
+      queryClient.invalidateQueries({ queryKey: ['published-courses'] });
     },
   });
 

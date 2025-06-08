@@ -12,8 +12,8 @@ const router: Router = Router();
 
 router.post('/', asyncHandler(coursesController.createCourse));
 router.get('/', asyncHandler(coursesController.getCoursesByUser));
-router.get('/:courseId', asyncHandler(coursesController.getCourseById));
 router.get('/published', asyncHandler(coursesController.getPublishedCourses));
+router.get('/:courseId', asyncHandler(coursesController.getCourseById));
 router.put('/:courseId', asyncHandler(coursesController.updateCourse));
 router.delete('/:courseId', asyncHandler(coursesController.deleteCourse));
 router.put('/:courseId/is-published', asyncHandler(coursesController.toggleIsPublished));
