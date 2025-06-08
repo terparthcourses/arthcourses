@@ -358,6 +358,40 @@ class CoursesController {
       });
     }
   }
+
+  async getPublishedCourses(req: Request, res: Response) {
+    try {
+      // Get all published courses
+      const courses = await db.select()
+        .from(schema.courses)
+        .where(eq(schema.courses.isPublished, true));
+
+      // For each course, fetch full artwork objects in the correct order
+      const result = await Promise.all(courses.map(async (course: any) => {
+        let artworks: any[] = [];
+        if (Array.isArray(course.artworkIds) && course.artworkIds.length > 0) {
+          const fetchedArtworks = await db.select()
+            .from(schema.artworks)
+            .where(inArray(schema.artworks.id, course.artworkIds));
+          // Sort artworks to match the order of course.artworkIds
+          artworks = course.artworkIds
+            .map((id: string) => fetchedArtworks.find((a: any) => a.id === id))
+            .filter(Boolean);
+        }
+        return {
+          ...course,
+          artworks,
+        };
+      }));
+
+      return res.status(200).json(result);
+    } catch (error: any) {
+      console.error("Error getting published courses:", error);
+      return res.status(500).json({
+        message: 'Internal Server Error'
+      });
+    }
+  }
 }
 
 export const coursesController = new CoursesController();
