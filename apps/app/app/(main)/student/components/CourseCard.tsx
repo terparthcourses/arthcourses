@@ -102,13 +102,13 @@ export function CourseCard({ course, type, completions = [] }: CourseCardProps) 
                   </div>
                 </div>
               ))}
+              {artworks.length > 3 && (
+                <p className="text-sm text-muted-foreground">
+                  +{artworks.length - 3} more artwork{artworks.length - 3 !== 1 ? "s" : ""}
+                </p>
+              )}
             </div>) : (
             <p className="text-sm text-muted-foreground">No artworks assigned</p>
-          )}
-          {artworks.length > 3 && (
-            <p className="text-sm text-muted-foreground">
-              +{artworks.length - 3} more artworks
-            </p>
           )}
         </div>
       </CardContent>

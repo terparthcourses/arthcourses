@@ -1,7 +1,7 @@
 // Utilities
 import { api } from '@/lib/api-handler';
 
-// Types
+// Constants
 import type { Enrollment } from '@repo/database';
 
 export async function getEnrollments() {

@@ -144,7 +144,7 @@ export function CourseCard({ course, onDelete, onUpdate, onTogglePublish }: Cour
                 ))}
                 {artworks.length > 3 && (
                   <p className="text-sm text-muted-foreground">
-                    +{artworks.length - 3} more artworks
+                    +{artworks.length - 3} more artwork{artworks.length - 3 !== 1 ? "s" : ""}
                   </p>
                 )}
               </div>
