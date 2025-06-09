@@ -237,12 +237,47 @@ class CoursesController {
       if (artworkIds !== undefined) updateData.artworkIds = artworkIds;
 
       // Update the course
-      const updatedCourse = await db.update(schema.courses)
+      const updatedCourseArr = await db.update(schema.courses)
         .set(updateData)
         .where(eq(schema.courses.id, courseId))
         .returning();
 
-      return res.status(200).json(updatedCourse[0]);
+      const updatedCourse = updatedCourseArr[0];
+
+      if (artworkIds !== undefined && Array.isArray(artworkIds)) {
+        // Find artworks that are new
+        const oldArtworkIds = Array.isArray(course.artworkIds) ? course.artworkIds : [];
+        const newArtworkIds = artworkIds;
+        const addedArtworkIds = newArtworkIds.filter((id: string) => !oldArtworkIds.includes(id));
+
+        if (addedArtworkIds.length > 0) {
+          // Get all enrollments for this course
+          const enrollments = await db.select().from(schema.enrollments).where(eq(schema.enrollments.courseId, courseId));
+
+          for (const enrollment of enrollments) {
+            // For each enrollment, get all completions for this enrollment
+            const completions = await db.select().from(schema.completions).where(eq(schema.completions.enrollmentId, enrollment.id));
+            const completedArtworkIds = completions.map((c: any) => c.artworkId);
+
+            // For each added artwork, if no completion exists, create it
+            for (const artworkId of addedArtworkIds) {
+              if (!completedArtworkIds.includes(artworkId)) {
+                await db.insert(schema.completions).values({
+                  id: randomUUID(),
+                  userId: enrollment.userId,
+                  artworkId,
+                  enrollmentId: enrollment.id,
+                  isCompleted: false,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                });
+              }
+            }
+          }
+        }
+      }
+
+      return res.status(200).json(updatedCourse);
     } catch (error: any) {
       console.error("Error updating course:", error);
       return res.status(500).json({
