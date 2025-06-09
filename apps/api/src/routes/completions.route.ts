@@ -12,5 +12,6 @@ const router: Router = Router();
 
 router.get('/', asyncHandler(completionsController.getAllCompletionsForUser));
 router.get('/:enrollmentId', asyncHandler(completionsController.getCompletionsByEnrollmentId));
+router.put('/:completionId/complete', asyncHandler(completionsController.markCompletionAsCompleted));
 
 export default router;

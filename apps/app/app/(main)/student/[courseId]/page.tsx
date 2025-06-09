@@ -30,6 +30,7 @@ import Link from 'next/link';
 import { ArrowUpRightIcon, ImagesIcon, ZapIcon } from "lucide-react";
 
 export default function Page() {
+  // Parameters
   const params = useParams<{ courseId: string }>();
 
   // State to track if component has mounted
@@ -49,7 +50,6 @@ export default function Page() {
     localStorage.setItem(`student-course-${params.courseId}-active-tab`, value);
   };
 
-  // Don't render until mounted to avoid hydration mismatch
   if (!hasMounted) return null;
 
   return (
