@@ -1,5 +1,6 @@
 // UI Components
 import Container from "@/components/container";
+import Link from "next/link";
 
 // `ArtworkInsetBanner` Component
 import { ArtworkInsetBanner } from "./ArtworkInsetBanner";
@@ -13,6 +14,7 @@ interface ArtworkInsetContentProps {
   analysisTimeRemaining: number | null;
   isCurrentArtworkCompleted: boolean;
   onSkipAnalysis: () => void;
+  courseId: string;
 }
 
 export function ArtworkInsetContent({
@@ -21,6 +23,7 @@ export function ArtworkInsetContent({
   analysisTimeRemaining,
   isCurrentArtworkCompleted,
   onSkipAnalysis,
+  courseId,
 }: ArtworkInsetContentProps) {
   const images = (selectedArtwork as any)?.images || [];
 
@@ -46,16 +49,20 @@ export function ArtworkInsetContent({
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {images.map((image: any, index: number) => (
-                        <div
+                        <Link
                           key={index}
-                          className="aspect-square bg-gray-100 rounded-lg overflow-hidden"
+                          href={`/student/${courseId}/learn/${encodeURIComponent(image.url || image.src || image)}`}
+                          className="aspect-square bg-gray-100 rounded-lg overflow-hidden block"
+                          scroll={false}
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <img
                             src={image.url || image.src || image}
                             alt={`Artwork image ${index + 1}`}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
                           />
-                        </div>
+                        </Link>
                       ))}
                     </div>
                   )}
@@ -87,16 +94,20 @@ export function ArtworkInsetContent({
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {images.map((image: any, index: number) => (
-                            <div
+                            <Link
                               key={index}
-                              className="aspect-square bg-gray-100 rounded-lg overflow-hidden"
+                              href={`/student/${courseId}/learn/${encodeURIComponent(image.url || image.src || image)}`}
+                              className="aspect-square bg-gray-100 rounded-lg overflow-hidden block"
+                              scroll={false}
+                              target="_blank"
+                              rel="noopener noreferrer"
                             >
                               <img
                                 src={image.url || image.src || image}
                                 alt={`Artwork image ${index + 1}`}
-                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
                               />
-                            </div>
+                            </Link>
                           ))}
                         </div>
                       )}

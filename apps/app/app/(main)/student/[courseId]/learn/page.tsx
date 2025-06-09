@@ -293,6 +293,7 @@ export default function Page() {
             analysisTimeRemaining={analysisTimeRemaining}
             isCurrentArtworkCompleted={isCurrentArtworkCompleted}
             onSkipAnalysis={handleSkipAnalysis}
+            courseId={courseId}
           />
 
           <ArtworkInsetFooter

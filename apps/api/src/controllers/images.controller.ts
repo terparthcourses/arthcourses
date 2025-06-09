@@ -162,10 +162,14 @@ export class ImagesController {
 
   async getImageByUrl(req: Request, res: Response) {
     try {
-      const { url } = req.params;
+      let { imageUrl } = req.params;
+
+      if (imageUrl) {
+        imageUrl = decodeURIComponent(imageUrl);
+      }
 
       // Check if `imageUrl` is provided
-      if (!url) {
+      if (!imageUrl) {
         return res.status(400).json({
           message: "Bad Request"
         });
@@ -175,8 +179,11 @@ export class ImagesController {
       const [imageRecord] = await db
         .select()
         .from(schema.images)
-        .where(eq(schema.images.url, url))
+        .where(eq(schema.images.url, imageUrl))
         .limit(1);
+
+      console.log("imageUrl", imageUrl);
+      console.log("imageRecord", imageRecord);
 
       if (!imageRecord) {
         return res.status(404).json({
