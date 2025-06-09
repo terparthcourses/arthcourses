@@ -4,6 +4,8 @@
 
 // UI Components
 import Container from '@/components/container';
+import { ModeToggle } from '@/components/mode-toggle';
+import { UserDropdown } from '@/app/(auth)/UserDropdown';
 
 // `CourseCard` Component
 import { CourseCard } from './components/CourseCard';
@@ -40,7 +42,7 @@ export default function Page() {
   const enrolledCourses = publishedCourses?.filter((course: any) => enrolledCourseIds.includes(course.id)) || [];
   const unenrolledCourses = publishedCourses?.filter((course: any) => !enrolledCourseIds.includes(course.id)) || [];
 
-  // Map courseId to enrollmentId for quick lookup
+  // Map `courseId` to `enrollmentId` for quick lookup
   const courseIdToEnrollmentId = enrollments?.reduce((acc: Record<string, string>, enrollment: any) => {
     acc[enrollment.courseId] = enrollment.id;
     return acc;
@@ -55,6 +57,20 @@ export default function Page() {
 
   return (
     <>
+      <header className="border-b border-[var(--border)]">
+        <Container>
+          <nav className="flex justify-between items-center py-4">
+            <h1 className="text-xl font-medium flex items-center gap-4">
+              Art History Courses
+            </h1>
+            <div className="flex items-center gap-2">
+              <ModeToggle />
+              <UserDropdown />
+            </div>
+          </nav>
+        </Container>
+      </header>
+
       <main className="mb-8">
         <Container className="py-4">
           {enrolledCourses.length > 0 && (

@@ -12,23 +12,7 @@ export default function Layout({
 }) {
   return (
     <>
-      <div className="border-b border-[var(--border)]">
-        <Container>
-          <nav className="flex justify-between items-center py-4">
-            <h1 className="text-xl font-medium flex items-center gap-4">
-              Art History Courses
-            </h1>
-            <div className="flex items-center gap-2">
-              <ModeToggle />
-              <UserDropdown />
-            </div>
-          </nav>
-        </Container>
-      </div>
-
-      <div>
-        {children}
-      </div>
+      {children}
     </>
   );
 }
