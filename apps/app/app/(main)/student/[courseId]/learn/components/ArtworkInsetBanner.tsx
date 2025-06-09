@@ -34,7 +34,7 @@ export function ArtworkInsetBanner({
   return (
     <>
       {showTimer && (
-        <Card className="mb-6 border bg-muted p-4 rounded-2xl shadow-sm">
+        <Card className="mb-6 border bg-muted p-4 rounded-2xl">
           <CardContent className="p-0">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -62,7 +62,7 @@ export function ArtworkInsetBanner({
       )}
 
       {showCompleteNotification && (
-        <Card className="mb-6 border bg-muted p-4 rounded-2xl shadow-sm">
+        <Card className="mb-6 border bg-muted p-4 rounded-2xl">
           <CardContent className="p-0">
             <div className="flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400 mt-1" />

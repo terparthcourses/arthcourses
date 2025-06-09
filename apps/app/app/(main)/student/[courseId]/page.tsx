@@ -96,7 +96,7 @@ export default function Page() {
               </ScrollArea>
             </Tabs>
 
-            <Button asChild>
+            <Button asChild size="sm">
               <Link href={`/student/${params.courseId}/learn`}>
                 Learn
                 <ArrowUpRightIcon />

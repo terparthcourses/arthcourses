@@ -125,7 +125,7 @@ export function CourseCard({ course, type, completions = [] }: CourseCardProps) 
                 variant="default"
                 size="sm"
                 className="text-xs flex items-center gap-1"
-                onClick={() => router.push(`/student/${course.id}`)}
+                onClick={() => router.push(`/student/${course.id}/learn`)}
               >
                 Continue Learning
                 <ArrowRightIcon className="h-3.5 w-3.5 ml-1" />
