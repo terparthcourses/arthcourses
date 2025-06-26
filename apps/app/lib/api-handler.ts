@@ -13,7 +13,7 @@ const environment = process.env.NEXT_PUBLIC_ENVIRONMENT || "production";
 const BASE_URL =
   environment === "development"
     ? "http://localhost:8080"
-    : process.env.NEXT_PUBLIC_API_URL || "https://artbrush-api.spanhornet.com";
+    : process.env.NEXT_PUBLIC_API_URL || "https://api.arthcourses.org";
 
 export class ApiError extends Error {
   constructor(

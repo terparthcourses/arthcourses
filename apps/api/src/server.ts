@@ -42,15 +42,15 @@ export const createServer = (): Express => {
   }
 
   // CORS middleware
-  const corsMw = cors({
+  const corsMiddleware = cors({
     origin:
       environment === "development"
         ? "http://localhost:3000"
-        : "https://artbrush-app.spanhornet.com",
+        : "https://app.arthcourses.org",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   });
-  app.use(corsMw);
+  app.use(corsMiddleware);
 
   // Better-Auth middleware
   app.all("/api/auth/*splat", toNodeHandler(auth));
