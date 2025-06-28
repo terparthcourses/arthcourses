@@ -43,10 +43,7 @@ export const createServer = (): Express => {
 
   // CORS middleware
   const corsMiddleware = cors({
-    origin:
-      environment === "development"
-        ? "http://localhost:3000"
-        : "https://app.arthcourses.org",
+    origin: "app.arthcourses.org",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   });
