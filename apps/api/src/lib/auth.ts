@@ -106,7 +106,9 @@ export const auth =
         },
       },
       trustedOrigins: [
-        process.env.BETTER_AUTH_TRUSTED_ORIGIN_DOMAIN as string,
+        "https://app.arthcourses.org",
+        "https://api.arthcourses.org",
+        "https://arthcourses.org",
         "http://localhost:3000",
       ],
     });
