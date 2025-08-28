@@ -41,10 +41,6 @@ export function ArtworkInsetHeader({
                 <HomeIcon size={16} aria-hidden="true" />
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbLink href={`/student/${courseId}`} className="max-w-48 truncate">
-              {course?.title || 'Course'}
-            </BreadcrumbLink>
             <BreadcrumbSeparator />
             {selectedArtwork && (
               <>

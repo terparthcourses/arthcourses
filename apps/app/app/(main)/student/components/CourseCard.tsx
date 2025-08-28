@@ -27,6 +27,7 @@ import {
   PaletteIcon,
   UserIcon,
   UsersIcon,
+  ZapIcon,
 } from "lucide-react";
 
 interface CourseCardProps {
@@ -122,6 +123,15 @@ export function CourseCard({ course, type, completions = [] }: CourseCardProps) 
             </div>
             <div className="flex gap-2">
               <Button
+                variant="outline"
+                size="sm"
+                className="text-xs flex items-center gap-1"
+                onClick={() => router.push(`/student/${course.id}/flashcards`)}
+              >
+                <ZapIcon className="h-3.5 w-3.5 mr-1" />
+                Flashcards
+              </Button>
+              <Button
                 variant="default"
                 size="sm"
                 className="text-xs flex items-center gap-1"
@@ -139,6 +149,15 @@ export function CourseCard({ course, type, completions = [] }: CourseCardProps) 
               {course.studentsEnrolled} student{course.studentsEnrolled !== 1 ? "s" : ""}
             </div>
             <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs flex items-center gap-1"
+                onClick={() => router.push(`/student/${course.id}/flashcards`)}
+              >
+                <ZapIcon className="h-3.5 w-3.5 mr-1" />
+                Preview Flashcards
+              </Button>
               <Button
                 variant="default"
                 size="sm"
