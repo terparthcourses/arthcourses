@@ -8,8 +8,8 @@ import {
 // Actions
 import { createArtwork } from '../actions/createArtwork';
 import { getArtworks } from '../actions/getArtworks';
-import { updateArtwork } from '../actions/updateArtwork';
-import { deleteArtwork } from '../actions/deleteArtwork';
+import { updateArtwork } from "../actions/updateArtwork";
+import { deleteArtwork } from "../actions/deleteArtwork";
 
 // Constants
 import { type ArtworkFormValues } from '../consants';
@@ -27,7 +27,6 @@ export function useArtworks() {
     mutationFn: (values: ArtworkFormValues) => createArtwork({ values }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
-      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
     },
   });
 
@@ -45,7 +44,6 @@ export function useArtworks() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
-      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
     },
   });
 
@@ -57,7 +55,6 @@ export function useArtworks() {
     }) => deleteArtwork({ artworkId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teacher-artworks'] });
-      queryClient.invalidateQueries({ queryKey: ['teacher-courses'] });
     },
   });
 
